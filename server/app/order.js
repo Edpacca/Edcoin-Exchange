@@ -5,5 +5,6 @@ class Order {
         this.price = price;
         this.action = action;
         this.orderTime = Date.now();
+        this.id = Symbol("id");
     }
 }
