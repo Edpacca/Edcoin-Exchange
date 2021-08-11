@@ -8,17 +8,29 @@ class Matcher {
     };
 
     matchNewOrder(newOrder) {
+
+        if (!this.validateOrder(newOrder)) return false;
+
+        console.log("\n new order: ");
+        console.log(newOrder);
+
+        let existingOrders = newOrder.action == "BUY" 
+            ? this.sellOrders 
+            : this.buyOrders;
         
+        let potentialMatches = this.getPotentialMatches(newOrder, existingOrders);
+        
+        console.log("\n matches: ")
+        console.log(potentialMatches);
+    };
+
+    validateOrder(newOrder) {
+
         if (!(newOrder instanceof Order)) return false;
         if (newOrder.action !== "BUY" && newOrder.action !== "SELL") return false;
 
-        console.log("new order: ");
-        console.log(newOrder);
-
-        let existingOrders = newOrder.action == "BUY" ? this.sellOrders : this.buyOrders;
-        let potentialMatches = this.getPotentialMatches(newOrder, existingOrders);
-        // console.log(potentialMatches);
-    };
+        return true;
+    }
 
     getPotentialMatches(newOrder, existingOrders) {
 
@@ -31,21 +43,9 @@ class Matcher {
         } else {
             potentialMatches = existingOrders.filter(order => order.price >= newOrder.price);
         }
-        
-        console.log("matches: ")
-        console.log(potentialMatches);
-        
+
         return potentialMatches;
     };
-
-    compareBuyOrder(newBuyOrder, existingSellOrder) {
-        return newBuyOrder.price >= existingSellOrder.price;
-    };
-
-    compareSellOrder(newSellOrder, existingBuyOrder) {
-        return newSellOrder.price <= existingBuyOrder.price;
-    };
-    
 };
 
 module.exports = Matcher;
