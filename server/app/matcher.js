@@ -14,11 +14,7 @@ class Matcher {
         console.log("\n new order: ");
         console.log(newOrder);
 
-        let existingOrders = newOrder.action == "BUY" 
-            ? this.sellOrders 
-            : this.buyOrders;
-        
-        let potentialMatches = this.getPotentialMatches(newOrder, existingOrders);
+        let potentialMatches = this.getPotentialMatches(newOrder);
         
         console.log("\n matches: ")
         console.log(potentialMatches);
@@ -32,16 +28,23 @@ class Matcher {
         return true;
     }
 
-    getPotentialMatches(newOrder, existingOrders) {
-
-        if (newOrder.action == existingOrders[0].action) return false;
+    getPotentialMatches(newOrder) {
 
         let potentialMatches;
 
         if (newOrder.action == "BUY") {
-            potentialMatches = existingOrders.filter(order => order.price <= newOrder.price);
+
+            potentialMatches = this.sellOrders.filter(order => order.price <= newOrder.price);
+            potentialMatches.sort((a, b) => (a.price > b.price) ? 1: -1);
+
+        } else if (newOrder.action == "SELL") {
+
+            potentialMatches = this.buyOrders.filter(order => order.price >= newOrder.price);
+            potentialMatches.sort((a, b) => (a.price < b.price) ? 1: -1);
+
         } else {
-            potentialMatches = existingOrders.filter(order => order.price >= newOrder.price);
+
+            return false;
         }
 
         return potentialMatches;
