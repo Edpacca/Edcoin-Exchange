@@ -1,11 +1,12 @@
-function Matcher() {
+const Order = require("./order");
+class Matcher {
 
-    let buyOrders = [];
-    let sellOrders = [];
+    buyOrders = [];
+    sellOrders = [];
 
-    function matchNewOrder(newOrder) {
+    matchNewOrder = function(newOrder) {
         
-        if (typeof newOrder !== Order) return false;
+        if (newOrder instanceof Order) return false;
         if (newOrder.action !== "BUY" || newOrder.action !== "SELL") return false;
 
         let potentialMatches;
@@ -15,10 +16,9 @@ function Matcher() {
         } else {
             potentialMatches = compareWithExistingOrders(newOrder, buyOrders);
         };
+    };
 
-    }
-
-    function compareWithExistingOrders(newOrder, existingOrders) {
+    getPotentialMatches = function(newOrder, existingOrders) {
 
         if (newOrder.action == existingOrders[0].action) return false;
 
@@ -32,18 +32,16 @@ function Matcher() {
         }
 
         return potentialMatches;
-    }
+    };
 
-    function compareBuyOrder(newBuyOrder, existingSellOrder) {
-        
-        return newBuyOrder.price >= existingSellOrder ? true : false;
-    }
+    compareBuyOrder = function(newBuyOrder, existingSellOrder) {
+        return newBuyOrder.price >= existingSellOrder.price;
+    };
 
-    function compareSellOrder(newSellOrder, existingBuyOrder) {
-        
-        return newSellOrder.price <= existingBuyOrder ? true : false;
-    }
+    compareSellOrder = function(newSellOrder, existingBuyOrder) {
+        return newSellOrder.price <= existingBuyOrder.price;
+    };
     
-}
+};
 
 module.exports = Matcher;
