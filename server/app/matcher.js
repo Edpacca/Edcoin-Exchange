@@ -1,44 +1,48 @@
 const Order = require("./order");
+const MockOrders = require("./mockOrders");
 class Matcher {
 
-    buyOrders = [];
-    sellOrders = [];
+    constructor(sellOrdersDb, buyOrdersDb) {
+        this.sellOrders = sellOrdersDb;
+        this.buyOrders = buyOrdersDb;
+    };
 
-    matchNewOrder = function(newOrder) {
+    matchNewOrder(newOrder) {
         
-        if (newOrder instanceof Order) return false;
-        if (newOrder.action !== "BUY" || newOrder.action !== "SELL") return false;
+        if (!(newOrder instanceof Order)) return false;
+        if (newOrder.action !== "BUY" && newOrder.action !== "SELL") return false;
+
+        console.log("new order: ");
+        console.log(newOrder);
+
+        let existingOrders = newOrder.action == "BUY" ? this.sellOrders : this.buyOrders;
+        let potentialMatches = this.getPotentialMatches(newOrder, existingOrders);
+        // console.log(potentialMatches);
+    };
+
+    getPotentialMatches(newOrder, existingOrders) {
+
+        if (newOrder.action == existingOrders[0].action) return false;
 
         let potentialMatches;
 
         if (newOrder.action == "BUY") {
-            potentialMatches = compareWithExistingOrders(newOrder, sellOrders);
+            potentialMatches = existingOrders.filter(order => order.price <= newOrder.price);
         } else {
-            potentialMatches = compareWithExistingOrders(newOrder, buyOrders);
-        };
-    };
-
-    getPotentialMatches = function(newOrder, existingOrders) {
-
-        if (newOrder.action == existingOrders[0].action) return false;
-
-        let potentialMatches = [];
-        let compareFunction = newOrder.action == "BUY" ? compareBuyOrder : compareSellOrder;
-
-        for (let existingOrder of existingOrders) {
-            if (compareFunction(newOrder, existingOrder)) {
-                potentialMatches.push(existingOrder);
-            }
+            potentialMatches = existingOrders.filter(order => order.price >= newOrder.price);
         }
-
+        
+        console.log("matches: ")
+        console.log(potentialMatches);
+        
         return potentialMatches;
     };
 
-    compareBuyOrder = function(newBuyOrder, existingSellOrder) {
+    compareBuyOrder(newBuyOrder, existingSellOrder) {
         return newBuyOrder.price >= existingSellOrder.price;
     };
 
-    compareSellOrder = function(newSellOrder, existingBuyOrder) {
+    compareSellOrder(newSellOrder, existingBuyOrder) {
         return newSellOrder.price <= existingBuyOrder.price;
     };
     
