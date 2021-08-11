@@ -16,7 +16,12 @@ describe("Matcher", () => {
         expect(matcher.matchNewOrder(new Order(1, 1, 1, "INVALID_ACTION"))).toBe(false);
     });
 
-    it("returns true if the order object has valid action", () => {
+    it("returns true if the order object has valid SELL action", () => {
         expect(matcher.matchNewOrder(new Order(1, 1, 1, "SELL"))).toBe(false);
     });
+
+    it("returns true if the order object has valid BUY action", () => {
+        expect(matcher.matchNewOrder(new Order(1, 1, 1, "BUY"))).toBe(false);
+    });
+    
 });
