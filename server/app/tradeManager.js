@@ -5,73 +5,61 @@ const mockOrders = require("./mockOrders");
 var _ = require('lodash'); 
 
 let ordersDb = mockOrders.getOrders();
-let matcher = new Matcher(ordersDb);
 let newOrder = mockOrders.getOrder("BUY");
-
-// print Db for debug 
-printDb();
-
-handleNewTrade(newOrder);
-
-// print Db again for debug
-printDb();
+let completedTrades = [];
 
 // take new order, find matches and perform trades
-function handleNewTrade(newOrder) {
+function handleNewTrade(newOrder, ordersDb) {
     
+    let matcher = new Matcher(ordersDb);
     let matchedOrders = matcher.matchNewOrder(newOrder);
 
     if (!matchedOrders) {
-        console.log("\nno matchings orders.");
-        console.log("adding new order to databse...");
         ordersDb.push(newOrder);
     } else {
-        // console.log("\nmatched orders:");
-        // console.log(matchedOrders);
-        makeTrades(newOrder, matchedOrders);
+        
+        // make trade with new order
+        // newOrder is returned if unfulfilled and added to db
+        if (makeTrades(newOrder, matchedOrders) != undefined ){
+            ordersDb.push(newOrder);
+        };
     };
 }
 
-// take matching orders and perform trades
+// recieves matched orders and perform trades with new order
 function makeTrades(newOrder, matchedOrders) {
     
     for (let i = 0; i < matchedOrders.length; i++) {
         
-        console.log("\n\nMatched trade: ");
-        console.log(matchedOrders[i]); 
-        console.log(`\nMaking trade: ${matchedOrders[i].action} at ${matchedOrders[i].price}`);
-
         if (matchedOrders[i].action == newOrder.action) {
-            throw console.error("cannot perform trade between orders with same action");
+            throw new Error("cannot perform trade between orders with same action");
         }
 
+        // make trade and add to trade Db
         let trade = new Trade(matchedOrders[i], newOrder);
+        completedTrades.push(trade);
 
         // new order has been fulfilled, stop making trades
         if (newOrder.quantity == 0) {
-            console.log("\nnew order fulfilled.");
             break;
-        // new order has remaining quantity, and there are remaining matches
-        } else if (i < matchedOrders.length - 1) {
-            console.log("\ntrade completed. new order has remaining quantity. continuing trades.")
-            console.log(newOrder);
         // new order has remaining quantity but no more matches
-        } else {
-            console.log("trade completed. no more matches. adding new trade to database...");
-            ordersDb.push(newOrder);
-            console.log(newOrder);
+        // add new order to database
+        } else if ( i == matchedOrders.length - 1) {
+            return newOrder;
         };
     };
 
-    // remove all trades with 0 quantity.
-    console.log("\n removing fulfilled trades from database:")
-    console.log(ordersDb.filter(function(order){return order.quantity == 0}));
-    _.remove(ordersDb, function(order){return order.quantity == 0});
+    removeFulfilledOrders();
 
 };
 
-// debug for database
-function printDb() {
-    console.log("\n\n" + ordersDb.length + " orders in database");
-    console.log(ordersDb);
+function getCompletedTrades() {
+    return completedTrades;
 }
+
+function removeFulfilledOrders() {
+    // remove all trades with 0 quantity.
+    _.remove(ordersDb, function(order){return order.quantity == 0});
+}
+
+module.exports = { handleNewTrade, makeTrades, getCompletedTrades };
