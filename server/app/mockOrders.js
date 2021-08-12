@@ -1,74 +1,57 @@
 const Order = require("./order");
 
-class MockOrders {
+orders = [];
 
-    maxSellOrders = 5;
-    maxBuyOrders = 5;
-    debug = false;
-    sellOrders = [];
-    buyOrders = [];
+function getOrder(action = "BUY") {
 
-    constructor(maxSellOrders, maxBuyOrders, debug){
-        this.maxSellOrders = maxSellOrders;
-        this.maxBuyOrders = maxBuyOrders;
-        this.debug = debug;
-    };
+    if (action !== "BUY" && action !== "SELL") {
+        return false;
+    }
 
-    createRandomOrder(action) {
+    return new Order(
+        99, 
+        getRandomArbitrary(10, 80), 
+        getRandomInt(1, 50), action);
+};
 
-        if (action !== "BUY" && action !== "SELL") {
-            return false;
-        }
+function generateOrders(maxOrders) {
 
-        return new Order(
-            99, 
-            this.getRandomArbitrary(10, 80), 
-            this.getRandomInt(1, 50), action);
+    for (let i = 0; i < maxOrders; i++) {
+
+        let newSellOrder = new Order(
+            i, 
+            getRandomArbitrary(10, 80), 
+            getRandomInt(1, 50), "SELL");
+
+        orders.push(newSellOrder);
     };
     
-    generateOrders() {
-        for (let i = 0; i < this.maxSellOrders; i++) {
+    for (let i = 0; i < maxOrders; i++) {
 
-            let newSellOrder = new Order(
-                i, 
-                this.getRandomArbitrary(10, 80), 
-                this.getRandomInt(1, 50), "SELL");
+        let newBuyOrder = new Order(
+            i + maxOrders, 
+            getRandomArbitrary(10, 80), 
+            getRandomInt(1, 50), "BUY");
 
-            this.sellOrders.push(newSellOrder);
-            if (this.debug) console.log(newSellOrder);
-        };
-        
-        for (let i = 0; i < this.maxBuyOrders; i++) {
-
-            let newBuyOrder = new Order(
-                i, 
-                this.getRandomArbitrary(10, 80), 
-                this.getRandomInt(1, 50), "BUY");
-
-            this.buyOrders.push(newBuyOrder);
-            if (this.debug) console.log(newBuyOrder);    
-        };
-    };
-
-    getOrders() {
-
-        this.generateOrders();
-
-        return {
-            sellOrders: this.sellOrders,
-            buyOrders: this.buyOrders,
-        };
-    };
-
-    getRandomArbitrary(min, max) {
-        return Math.random() * (max - min) + min;
-    };
-
-    getRandomInt(min, max) {
-        min = Math.ceil(min);
-        max = Math.floor(max);
-        return Math.floor(Math.random() * (max - min) + min);
+        orders.push(newBuyOrder);
     };
 };
 
-module.exports = MockOrders;
+function getOrders(maxOrders = 5) {
+
+    generateOrders(maxOrders);
+
+    return orders;
+};
+
+function getRandomArbitrary(min, max) {
+    return Math.random() * (max - min) + min;
+};
+
+function getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min) + min);
+};
+
+module.exports = { getOrder, getOrders };
