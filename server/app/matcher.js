@@ -10,9 +10,7 @@ class Matcher {
     matchNewOrder(newOrder) {
 
         if (!this.validateOrder(newOrder)) return false;
-
-        console.log("\n new order: ");
-        console.log(newOrder);
+        if (this.orders.length == 0) return false;
 
         let potentialMatches = this.getPotentialMatches(newOrder);
         
@@ -43,10 +41,7 @@ class Matcher {
             potentialMatches = potentialMatches.filter(o => o.price >= newOrder.price);
             potentialMatches.sort((a, b) => (a.price - b.price));
 
-        } else {
-
-            return false;
-        }
+        } else return false;
 
         return potentialMatches;
     };
