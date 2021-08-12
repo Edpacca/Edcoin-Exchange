@@ -1,10 +1,10 @@
 const Order = require("./order");
 const MockOrders = require("./mockOrders");
+const Trade = require("./mockOrders");
 class Matcher {
 
-    constructor(sellOrdersDb, buyOrdersDb) {
-        this.sellOrders = sellOrdersDb;
-        this.buyOrders = buyOrdersDb;
+    constructor(ordersDb) {
+        this.orders = ordersDb;
     };
 
     matchNewOrder(newOrder) {
@@ -16,8 +16,9 @@ class Matcher {
 
         let potentialMatches = this.getPotentialMatches(newOrder);
         
-        console.log("\n matches: ")
-        console.log(potentialMatches);
+        return potentialMatches.length == 0 
+            ? false 
+            : potentialMatches;
     };
 
     validateOrder(newOrder) {
@@ -30,17 +31,17 @@ class Matcher {
 
     getPotentialMatches(newOrder) {
 
-        let potentialMatches;
+        let potentialMatches = this.filterOrders(newOrder.action);
 
         if (newOrder.action == "BUY") {
 
-            potentialMatches = this.sellOrders.filter(order => order.price <= newOrder.price);
-            potentialMatches.sort((a, b) => (a.price > b.price) ? 1: -1);
+            potentialMatches = potentialMatches.filter(o => o.price <= newOrder.price);
+            potentialMatches.sort((a, b) => (b.price - a.price));
 
         } else if (newOrder.action == "SELL") {
 
-            potentialMatches = this.buyOrders.filter(order => order.price >= newOrder.price);
-            potentialMatches.sort((a, b) => (a.price < b.price) ? 1: -1);
+            potentialMatches = potentialMatches.filter(o => o.price >= newOrder.price);
+            potentialMatches.sort((a, b) => (a.price - b.price));
 
         } else {
 
@@ -49,6 +50,16 @@ class Matcher {
 
         return potentialMatches;
     };
+
+    filterOrders(action) {
+
+        let opposingAction = action == "BUY" 
+            ? "SELL" 
+            : "BUY";
+
+        return this.orders.filter(o => o.action == opposingAction);
+    }
+
 };
 
 module.exports = Matcher;
