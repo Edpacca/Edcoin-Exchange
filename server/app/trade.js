@@ -14,18 +14,15 @@ class Trade {
         this.tradeQuantity = Math.min(
             this.existingOrder.quantity, this.newOrder.quantity);
 
-        this.completedOrder = this.makeTrade();
-    }
+        this.makeTrade();
+    };
 
     makeTrade(){
 
         this.orders.forEach(order => {
-            order.quantity -= this.tradeQuantity;            
+            order.quantity -= this.tradeQuantity;
         });
-
-        return this.orders.filter(order => order.quantity == 0);
-    }
-    
+    };
 }
 
 module.exports = Trade;
