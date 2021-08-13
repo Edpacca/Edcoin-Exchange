@@ -46,7 +46,7 @@ class Matcher {
 
     filterOrders(action) {
 
-        let opposingAction = action == "BUY" 
+        const opposingAction = action == "BUY" 
             ? "SELL" 
             : "BUY";
 
