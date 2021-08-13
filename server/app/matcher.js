@@ -1,6 +1,4 @@
 const Order = require("./order");
-const MockOrders = require("./mockOrders");
-const Trade = require("./mockOrders");
 class Matcher {
 
     constructor(ordersDb) {
