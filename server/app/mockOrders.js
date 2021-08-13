@@ -1,7 +1,5 @@
 const Order = require("./order");
 
-orders = [];
-
 function getOrder(action = "BUY") {
 
     if (action !== "BUY" && action !== "SELL") {
@@ -14,32 +12,22 @@ function getOrder(action = "BUY") {
         getRandomInt(1, 50), action);
 };
 
-function generateOrders(maxOrders) {
-
-    for (let i = 0; i < maxOrders; i++) {
-
-        let newSellOrder = new Order(
-            i, 
-            getRandomArbitrary(10, 80), 
-            getRandomInt(1, 50), "SELL");
-
-        orders.push(newSellOrder);
-    };
-    
-    for (let i = 0; i < maxOrders; i++) {
-
-        let newBuyOrder = new Order(
-            i + maxOrders, 
-            getRandomArbitrary(10, 80), 
-            getRandomInt(1, 50), "BUY");
-
-        orders.push(newBuyOrder);
-    };
-};
-
+// generates an equal amount of orders with opposing actions
 function getOrders(maxOrders = 5) {
 
-    generateOrders(maxOrders);
+    let orders = [];
+
+    for (let i = 0; i < maxOrders * 2; i++) {
+
+        
+        let action = i < maxOrders ? "SELL" : "BUY";
+        let newOrder = new Order(
+            i, 
+            getRandomArbitrary(10, 80), 
+            getRandomInt(1, 50), action);
+
+        orders.push(newOrder);
+    };
 
     return orders;
 };
