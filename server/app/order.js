@@ -1,7 +1,8 @@
+const { v4: uuid } = require('uuid');
 class Order {
 
     orderTime = Date.now();
-    id = Symbol("id");
+    id = uuid();
 
     constructor(account, price, quantity, action) {
         this.account = account;
