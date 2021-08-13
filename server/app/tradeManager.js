@@ -2,7 +2,7 @@ const Order = require("./order");
 const Matcher = require("./matcher");
 const Trade = require("./trade");
 const mockOrders = require("./mockOrders");
-var _ = require('lodash'); 
+const _ = require('lodash'); 
 
 let ordersDb = mockOrders.getOrders();
 let newOrder = mockOrders.getOrder("BUY");
