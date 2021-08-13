@@ -16,24 +16,27 @@ describe("Matcher", () => {
         matcher = new Matcher(orders);
     });
 
-    it("validateOrder returns false if matchNewOrder is passed an invalid order object", () => {
-        expect(matcher.validateOrder("badOrder")).toBe(false);
-    });
+    describe("validate order", () => {
 
-    it("validateOrder returns false if the order object has invalid action", () => {
-        expect(matcher.validateOrder(new Order(1, 1, 1, "INVALID_ACTION"))).toBe(false);
+        it("validateOrder returns false if matchNewOrder is passed an invalid order object", () => {
+            expect(matcher.validateOrder("badOrder")).toBe(false);
+        });
+    
+        it("validateOrder returns false if the order object has invalid action", () => {
+            expect(matcher.validateOrder(new Order(1, 1, 1, "INVALID_ACTION"))).toBe(false);
+        });
+    
+        it("validateOrder returns true if the order object has valid SELL action", () => {
+            expect(matcher.validateOrder(new Order(1, 1, 1, "SELL"))).toBe(true);
+        });
+    
+        it("validateOrder returns true if the order object has valid BUY action", () => {
+            expect(matcher.validateOrder(new Order(1, 1, 1, "BUY"))).toBe(true);
+        });
     });
 
     it("getPotentialMatches returns false if the order object has invalid action", () => {
         expect(matcher.getPotentialMatches(new Order(1, 1, 1, "INVALID_ACTION"))).toBe(false);
-    });
-
-    it("validateOrder returns true if the order object has valid SELL action", () => {
-        expect(matcher.validateOrder(new Order(1, 1, 1, "SELL"))).toBe(true);
-    });
-
-    it("validateOrder returns true if the order object has valid BUY action", () => {
-        expect(matcher.validateOrder(new Order(1, 1, 1, "BUY"))).toBe(true);
     });
 
     it("filterOrders returns an array of SELL orders if passed a BUY order", () => {
