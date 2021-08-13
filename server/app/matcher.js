@@ -29,12 +29,12 @@ class Matcher {
 
         let potentialMatches = this.filterOrders(newOrder.action);
 
-        if (newOrder.action == "BUY") {
+        if (newOrder.action === "BUY") {
 
             potentialMatches = potentialMatches.filter(o => o.price <= newOrder.price);
             potentialMatches.sort((a, b) => (b.price - a.price));
 
-        } else if (newOrder.action == "SELL") {
+        } else if (newOrder.action === "SELL") {
 
             potentialMatches = potentialMatches.filter(o => o.price >= newOrder.price);
             potentialMatches.sort((a, b) => (a.price - b.price));
@@ -46,7 +46,7 @@ class Matcher {
 
     filterOrders(action) {
 
-        const opposingAction = action == "BUY" 
+        const opposingAction = action === "BUY" 
             ? "SELL" 
             : "BUY";
 
