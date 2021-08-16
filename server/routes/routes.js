@@ -1,5 +1,7 @@
-const mockOrders = require('../app/mockOrders');
+const Order = require('../app/order');
+const db = require('../db/dbManager');
 
+let ordersDb = db.getOrders();
 /* 
 3. Integrate the express framework into your server-side code.
 
@@ -23,17 +25,45 @@ const appRouter = function(app) {
     // 5 GET trade data => 
     // 6 POST create new order => send to matcher
 
-    app.get("/orders", function(req, res) {
-        res.status(200).send(mockOrders.getOrders());
+    app.get("/orders", (request, result) => {
+
+        result.status(200).send(ordersDb);
     });
 
-    app.get("/order/:num", function(req, res) {
+    app.get("/order/:id", (request, result) => {
         
-        let orders = mockOrders.getOrders();
-        let id = req.params.num;
+        let order = ordersDb.find(o => o.id === request.params.id);
 
-        res.status(200).send(orders.find(o => o.id === id));
+        if (order == null) {
+            result.status(400).send("Invalid id");
+        } else {
+            result.status(200).send(order);
+        };
+
     });
+
+    app.post("/order", (request, result) => {
+
+        // only verifying order direction for mock model
+        if (request.body.action !== "BUY" && request.body.action !== "SELL") {
+
+            result.status(400).send("invalid action: cannot create order");
+
+        } else {
+
+            let order = new Order(
+                request.body.account,
+                request.body.quantity,
+                request.body.price,
+                request.body.action);
+    
+            ordersDb.push(order);
+
+            result.status(201).send(order);
+        }
+
+    });
+
 }
 
 module.exports = appRouter;
