@@ -44,8 +44,8 @@ const appRouter = function(app) {
 
             let order = new Order(
                 request.body.account,
-                request.body.quantity,
                 request.body.price,
+                request.body.quantity,
                 request.body.action);
 
             // pass order to trade manager
