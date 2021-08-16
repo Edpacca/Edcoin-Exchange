@@ -44,7 +44,6 @@ class Matcher {
             potentialMatches.sort((a, b) => (a.price - b.price));
 
         } else {
-
             return false;
         }
 
