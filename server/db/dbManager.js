@@ -1,6 +1,7 @@
 const mockOrders = require("./mockOrders");
 
 let ordersDb = [];
+let tradesDb = [];
 let isDbInitialised = false;
 
 function initialiseDb() {
