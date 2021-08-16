@@ -1,12 +1,9 @@
-const Order = require("./order");
 const Matcher = require("./matcher");
 const Trade = require("./trade");
-const mockOrders = require("./mockOrders");
 const _ = require('lodash'); 
 
-let ordersDb = mockOrders.getOrders();
-let newOrder = mockOrders.getOrder("BUY");
-let completedTrades = [];
+let trades = [];
+let message = '';
 
 // take new order, find matches and perform trades
 function handleNewTrade(newOrder, ordersDb) {
@@ -14,21 +11,36 @@ function handleNewTrade(newOrder, ordersDb) {
     let matcher = new Matcher(ordersDb);
     let matchedOrders = matcher.matchNewOrder(newOrder);
 
-    if (!matchedOrders) {
-        ordersDb.push(newOrder);
+    let isOrderFulfilled = (makeTrades(newOrder, matchedOrders));
+
+    if (!isOrderFulfilled) {
+
+        message += `New order not fulfilled. \nAdding order ${newOrder.id} to database.\n\n`
+        return false;
+
     } else {
-        
-        // make trade with new order
-        // newOrder is returned if unfulfilled and added to db
-        if (makeTrades(newOrder, matchedOrders) != undefined ){
-            ordersDb.push(newOrder);
-        };
+
+        message += 'New order fulfilled.\n'
+        return true;
+    };
+    
+}
+
+function getTradeData() {
+    return {
+        trades,
+        message
     };
 }
 
 // recieves matched orders and perform trades with new order
 function makeTrades(newOrder, matchedOrders) {
     
+    if (matchedOrders.length === 0) {
+        message += "No matches found.\n";
+        return false;
+    }
+
     for (let i = 0; i < matchedOrders.length; i++) {
         
         if (matchedOrders[i].action == newOrder.action) {
@@ -37,29 +49,18 @@ function makeTrades(newOrder, matchedOrders) {
 
         // make trade and add to trade Db
         let trade = new Trade(matchedOrders[i], newOrder);
-        completedTrades.push(trade);
+        trades.push(trade);
 
         // new order has been fulfilled, stop making trades
         if (newOrder.quantity == 0) {
-            break;
-        // new order has remaining quantity but no more matches
-        // add new order to database
+            return true;
+
+        // return false if new order has no more matches
         } else if ( i == matchedOrders.length - 1) {
-            return newOrder;
+            return false;
         };
     };
 
-    removeFulfilledOrders();
-
 };
 
-function getCompletedTrades() {
-    return completedTrades;
-}
-
-function removeFulfilledOrders() {
-    // remove all trades with 0 quantity.
-    _.remove(ordersDb, function(order){return order.quantity == 0});
-}
-
-module.exports = { handleNewTrade, makeTrades, getCompletedTrades };
+module.exports = { handleNewTrade, getTradeData, makeTrades };
