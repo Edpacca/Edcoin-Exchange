@@ -10,7 +10,7 @@ class Matcher {
         if (!this.validateOrder(newOrder)) {
             return false;
         }
-        if (this.orders.length == 0) {
+        if (this.orders.length === 0) {
             return false;
         }
 
