@@ -1,4 +1,4 @@
-const Order = require("./order");
+const Order = require("../app/order");
 
 function getOrder(action = "BUY") {
 
