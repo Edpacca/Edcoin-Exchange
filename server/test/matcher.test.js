@@ -61,11 +61,12 @@ describe("Matcher", () => {
         expect(isOnlyBuyActions).toBe(true);
     });
 
-    it("matchNewOrder returns false if no matches are found", () => {
+    it("matchNewOrder returns empty array if no matches are found", () => {
         // all sell orders are above 10
         let order = new Order(1, 10, 1, "BUY");
+
     
-        expect(matcher.matchNewOrder(order)).toBe(false);
+        expect(matcher.matchNewOrder(order).length).toBe(0);
     });
 
     it("matchNewOrder returns an array if passed a valid Order with matches", () => {
