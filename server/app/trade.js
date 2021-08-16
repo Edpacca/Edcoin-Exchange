@@ -1,5 +1,3 @@
-const Order = require("../app/order");
-
 class Trade {
 
     constructor(existingOrder, newOrder) {
