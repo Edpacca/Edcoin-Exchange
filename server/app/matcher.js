@@ -2,12 +2,12 @@ class Matcher {
 
     constructor(ordersDb) {
         this.orders = ordersDb;
-    };
+    }
 
     matchNewOrder(newOrder) {
         if (this.orders.length === 0) return false;
         return this.getPotentialMatches(newOrder);
-    };
+    }
 
     getPotentialMatches(newOrder) {
         let potentialMatches = this.filterOrders(newOrder.action);
@@ -21,7 +21,7 @@ class Matcher {
         }
 
         return potentialMatches.length === 0 ? false : potentialMatches;
-    };
+    }
 
     filterOrders(action) {
         const opposingAction = action === "BUY" 
@@ -29,7 +29,7 @@ class Matcher {
             : "BUY";
 
         return this.orders.filter(o => o.action == opposingAction);
-    };
-};
+    }
+}
 
 module.exports = Matcher;
