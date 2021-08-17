@@ -23,11 +23,9 @@ class Matcher {
             potentialMatches = potentialMatches.filter(o => o.price >= newOrder.price);
             potentialMatches.sort((a, b) => (a.price - b.price));
 
-        } else {
-            return false;
         }
 
-        return potentialMatches;
+        return potentialMatches.length === 0 ? false : potentialMatches;
     };
 
     #filterOrders(action) {
