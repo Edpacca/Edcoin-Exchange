@@ -13,10 +13,10 @@ class Trade {
         this.tradeQuantity = Math.min(
             this.existingOrder.quantity, this.newOrder.quantity);
 
-        this.makeTrade();
+        this.#makeTrade();
     };
 
-    makeTrade(){
+    #makeTrade(){
         this.existingOrder.quantity -= this.tradeQuantity;
         this.newOrder.quantity -= this.tradeQuantity;
     };
