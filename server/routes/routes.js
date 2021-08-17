@@ -28,7 +28,6 @@ const appRouter = function(app) {
         } else {
             result.status(200).send(order);
         }
-
     });
 
     // create new order, match and perform trades

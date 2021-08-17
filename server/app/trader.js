@@ -5,9 +5,7 @@ class Trader {
     constructor(){}
 
     makeTrades(newOrder, matchedOrders) {
-
         debug('Trades completed:\n');
-
         const trades = [];
 
         for (let i = 0; i < matchedOrders.length; i++) {
@@ -23,9 +21,7 @@ class Trader {
             debug(`${trade.orderId1} -> ${trade.orderId2}\n`);
 
             if (newOrder.quantity == 0) return trades;
-
         }
-        
         return trades;
     }
 }

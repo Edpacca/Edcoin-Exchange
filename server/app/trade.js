@@ -1,7 +1,6 @@
 class Trade {
 
     constructor(existingOrder, newOrder) {
-
         this.time = new Date();
         this.price = existingOrder.price;
         this.quantity = Math.min(
