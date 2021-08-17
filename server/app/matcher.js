@@ -6,11 +6,11 @@ class Matcher {
 
     matchNewOrder(newOrder) {
         if (this.orders.length === 0) return false;
-        return this.#getPotentialMatches(newOrder);
+        return this.getPotentialMatches(newOrder);
     };
 
-    #getPotentialMatches(newOrder) {
-        let potentialMatches = this.#filterOrders(newOrder.action);
+    getPotentialMatches(newOrder) {
+        let potentialMatches = this.filterOrders(newOrder.action);
 
         if (newOrder.action === "BUY") {
 
@@ -21,13 +21,12 @@ class Matcher {
 
             potentialMatches = potentialMatches.filter(o => o.price >= newOrder.price);
             potentialMatches.sort((a, b) => (a.price - b.price));
-
         }
 
         return potentialMatches.length === 0 ? false : potentialMatches;
     };
 
-    #filterOrders(action) {
+    filterOrders(action) {
         const opposingAction = action === "BUY" 
             ? "SELL" 
             : "BUY";
