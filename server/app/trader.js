@@ -1,12 +1,12 @@
 const Trade = require("./trade");
-
+const debug = require("../../debugLogger");
 class Trader {
 
     constructor(){}
 
     makeTrades(newOrder, matchedOrders) {
 
-        console.log('Trades completed:\n');
+        debug('Trades completed:\n');
 
         const trades = [];
 
@@ -19,8 +19,8 @@ class Trader {
             let trade = new Trade(matchedOrders[i], newOrder);
             trades.push(trade);
 
-            console.log(`${trade.action} ${trade.quantity} at ${trade.price}`);
-            console.log(`${trade.orderId1} -> ${trade.orderId2}\n`);
+            debug(`${trade.action} ${trade.quantity} at ${trade.price}`);
+            debug(`${trade.orderId1} -> ${trade.orderId2}\n`);
 
             if (newOrder.quantity == 0) return trades;
 

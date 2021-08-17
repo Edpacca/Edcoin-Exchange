@@ -1,5 +1,6 @@
 const Matcher = require("../app/matcher");
-const Trader = require("../app/trader")
+const Trader = require("../app/trader");
+const debug = require("../../debugLogger");
 const _ = require('lodash'); 
 
 class ServiceManager { 
@@ -13,12 +14,12 @@ class ServiceManager {
     
         if(!this.#validateOrder) return false;
 
-        console.log(`New order: ${newOrder.action} ${newOrder.price} at ${newOrder.quantity}\n\n`);
+        debug(`New order: ${newOrder.action} ${newOrder.price} at ${newOrder.quantity}\n\n`);
 
         const matchedOrders = new Matcher(this.ordersDb).matchNewOrder(newOrder);
 
         if (!matchedOrders) {
-            console.log(`No matches found\nAdding new order ${newOrder.id} to database...`)
+            debug(`No matches found\nAdding new order ${newOrder.id} to database...`)
             this.ordersDb.push(order);
             return;
         }
@@ -26,9 +27,9 @@ class ServiceManager {
         const trades = new Trader().makeTrades(newOrder, matchedOrders);
 
         if (newOrder.quantity === 0) {
-            console.log('New order fulfilled.\n');
+            debug('New order fulfilled.\n');
         } else {
-            console.log(`New order not fulfilled. \nAdding order ${newOrder.id} to database.\n\n`);
+            debug(`New order not fulfilled. \nAdding order ${newOrder.id} to database.\n\n`);
             this.ordersDb.push(order);
         }
 
@@ -38,11 +39,11 @@ class ServiceManager {
 
     #validateOrder(newOrder) {
         if (!(newOrder instanceof Order)) {
-            console.log("new order is of invalid type");
+            debug("new order is of invalid type");
             return false;
         } 
         if (newOrder.action !== "BUY" && newOrder.action !== "SELL") {
-            console.log("new order does not have valid BUY/SELL action");
+            debug("new order does not have valid BUY/SELL action");
             return false;
         } 
         return true;
