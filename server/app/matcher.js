@@ -7,25 +7,16 @@ class Matcher {
 
     matchNewOrder(newOrder) {
 
-        if (!this.validateOrder(newOrder)) {
-            return false;
-        }
-        if (this.orders.length === 0) {
-            return false;
-        }
-
+        if (!this.validateOrder(newOrder)) return false;
+        if (this.orders.length === 0) return false;
         return this.getPotentialMatches(newOrder);
     };
 
     validateOrder(newOrder) {
 
-        if (!(newOrder instanceof Order)) {
-            return false;
-        }
-        if (newOrder.action !== "BUY" && newOrder.action !== "SELL") {
-            return false;
-        } 
-
+        if (!(newOrder instanceof Order)) return false;
+        if (newOrder.action !== "BUY" && newOrder.action !== "SELL") return false;
+        
         return true;
     }
 
