@@ -1,5 +1,6 @@
 const Matcher = require("../app/matcher");
 const Trader = require("../app/trader");
+const Order = require("../app/order");
 const debug = require("../../debugLogger");
 const _ = require('lodash'); 
 
@@ -12,7 +13,7 @@ class ServiceManager {
 
     handleNewOrder(newOrder) {
     
-        if(!this.#validateOrder) return false;
+        if(!this.validateOrder) return false;
 
         debug(`New order: ${newOrder.action} ${newOrder.price} at ${newOrder.quantity}\n`);
 
@@ -21,7 +22,7 @@ class ServiceManager {
         if (!matchedOrders) {
             debug(`No matches found\nAdding new order ${newOrder.id} to database...`)
             this.ordersDb.push(newOrder);
-            return;
+            return true;
         }
 
         const trades = new Trader().makeTrades(newOrder, matchedOrders);
@@ -35,9 +36,10 @@ class ServiceManager {
 
         _.remove(this.ordersDb, order => order.quantity === 0);
         this.tradesDb.push(...trades);
+        return true;
     }
 
-    #validateOrder(newOrder) {
+    validateOrder(newOrder) {
         if (!(newOrder instanceof Order)) {
             debug("new order is of invalid type");
             return false;
