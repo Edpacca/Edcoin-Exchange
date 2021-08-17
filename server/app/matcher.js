@@ -13,12 +13,9 @@ class Matcher {
         let potentialMatches = this.filterOrders(newOrder.action);
 
         if (newOrder.action === "BUY") {
-
             potentialMatches = potentialMatches.filter(o => o.price <= newOrder.price);
             potentialMatches.sort((a, b) => (b.price - a.price));
-
         } else if (newOrder.action === "SELL") {
-
             potentialMatches = potentialMatches.filter(o => o.price >= newOrder.price);
             potentialMatches.sort((a, b) => (a.price - b.price));
         }
@@ -32,7 +29,7 @@ class Matcher {
             : "BUY";
 
         return this.orders.filter(o => o.action == opposingAction);
-    }
+    };
 };
 
 module.exports = Matcher;
