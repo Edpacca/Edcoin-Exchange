@@ -11,12 +11,12 @@ class Trade {
         this.orderId2 = newOrder.id;
 
         this.#makeTrade(existingOrder, newOrder);
-    };
+    }
 
     #makeTrade(existingOrder, newOrder){
         existingOrder.quantity -= this.quantity;
         newOrder.quantity -= this.quantity;
-    };
+    }
 }
 
 module.exports = Trade;

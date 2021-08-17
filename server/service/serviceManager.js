@@ -12,11 +12,8 @@ class ServiceManager {
     }
 
     handleNewOrder(newOrder) {
-    
         if(!this.validateOrder) return false;
-
         debug(`New order: ${newOrder.action} ${newOrder.price} at ${newOrder.quantity}\n`);
-
         const matchedOrders = new Matcher(this.ordersDb).matchNewOrder(newOrder);
 
         if (!matchedOrders) {
@@ -31,7 +28,7 @@ class ServiceManager {
             debug('New order fulfilled.\n');
         } else {
             debug(`New order not fulfilled. \nAdding order ${newOrder.id} to database.\n\n`);
-            this.ordersDb.push(order);
+            this.ordersDb.push(newOrder);
         }
 
         _.remove(this.ordersDb, order => order.quantity === 0);

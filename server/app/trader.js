@@ -28,7 +28,7 @@ class Trader {
         
         return trades;
     }
-};
+}
 
 module.exports = Trader;
 

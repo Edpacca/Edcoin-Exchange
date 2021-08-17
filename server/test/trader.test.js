@@ -4,7 +4,6 @@ const Trader = require("../app/trader");
 describe("TradeManager", () => {
 
     it("throws an error if trading two orders with the same action", () => {
-
         const newOrder = new Order(0, 9, 15, "BUY");
         const matchedOrders = [
             new Order(1, 10, 10, "SELL"),
@@ -18,7 +17,6 @@ describe("TradeManager", () => {
     });
 
     it("returns an array of trades", () => {
-        
         const newOrder = new Order(0, 9, 15, "BUY");
         const matchedOrders = [
             new Order(1, 10, 10, "SELL"),
@@ -32,7 +30,6 @@ describe("TradeManager", () => {
     });
 
     it("makes multiple trades if newOrder is not fulfilled by first trade", () => {
-        
         const newOrder = new Order(0, 9, 15, "BUY");
         const matchedOrders = [
             new Order(1, 10, 10, "SELL"),
@@ -45,7 +42,6 @@ describe("TradeManager", () => {
     });
 
     it("reduces the new order by the correct amount", () => {
-
         const newOrder = new Order(0, 10, 15, "BUY");
         const matchedOrders = [ new Order(1, 5, 10, "SELL") ];
         const trader = new Trader();
@@ -55,7 +51,6 @@ describe("TradeManager", () => {
     });
 
     it("reduces the matched order by the correct amount", () => {
-
         const newOrder = new Order(0, 10, 10, "BUY");
         const matchedOrders = [ new Order(1, 5, 15, "SELL") ];
         const trader = new Trader();
