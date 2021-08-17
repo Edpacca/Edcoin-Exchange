@@ -4,9 +4,9 @@ class Trade {
 
         this.tradeTime = new Date(Date.now());
 
-        this.existingOrder = existingOrder,
+        this.existingOrder = existingOrder;
+        this.newOrder = newOrder;
         this.existingOrder.originalQuantity = existingOrder.quantity;
-        this.newOrder = newOrder,
         this.newOrder.originalQuantity = newOrder.quantity;
 
         this.tradePrice = this.existingOrder.price;
