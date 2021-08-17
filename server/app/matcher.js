@@ -1,4 +1,3 @@
-const Order = require("./order");
 class Matcher {
 
     constructor(ordersDb) {
