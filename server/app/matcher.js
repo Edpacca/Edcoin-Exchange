@@ -6,23 +6,19 @@ class Matcher {
     };
 
     matchNewOrder(newOrder) {
-
-        if (!this.validateOrder(newOrder)) return false;
+        if (!this.#validateOrder(newOrder)) return false;
         if (this.orders.length === 0) return false;
-        return this.getPotentialMatches(newOrder);
+        return this.#getPotentialMatches(newOrder);
     };
 
-    validateOrder(newOrder) {
-
+    #validateOrder(newOrder) {
         if (!(newOrder instanceof Order)) return false;
         if (newOrder.action !== "BUY" && newOrder.action !== "SELL") return false;
-        
         return true;
     }
 
-    getPotentialMatches(newOrder) {
-
-        let potentialMatches = this.filterOrders(newOrder.action);
+    #getPotentialMatches(newOrder) {
+        let potentialMatches = this.#filterOrders(newOrder.action);
 
         if (newOrder.action === "BUY") {
 
@@ -41,8 +37,7 @@ class Matcher {
         return potentialMatches;
     };
 
-    filterOrders(action) {
-
+    #filterOrders(action) {
         const opposingAction = action === "BUY" 
             ? "SELL" 
             : "BUY";
