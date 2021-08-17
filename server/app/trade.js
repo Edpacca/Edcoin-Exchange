@@ -3,22 +3,18 @@ class Trade {
     constructor(existingOrder, newOrder) {
 
         this.tradeTime = new Date();
-
-        this.existingOrder = existingOrder;
-        this.newOrder = newOrder;
-        this.existingOrder.originalQuantity = existingOrder.quantity;
-        this.newOrder.originalQuantity = newOrder.quantity;
-
-        this.tradePrice = this.existingOrder.price;
+        this.tradePrice = existingOrder.price;
         this.tradeQuantity = Math.min(
-            this.existingOrder.quantity, this.newOrder.quantity);
+            existingOrder.quantity, newOrder.quantity);
+        this.orderId1 = existingOrder.id;
+        this.orderId2 = newOrder.id;
 
-        this.#makeTrade();
+        this.#makeTrade(existingOrder, newOrder);
     };
 
-    #makeTrade(){
-        this.existingOrder.quantity -= this.tradeQuantity;
-        this.newOrder.quantity -= this.tradeQuantity;
+    #makeTrade(existingOrder, newOrder){
+        existingOrder.quantity -= this.tradeQuantity;
+        newOrder.quantity -= this.tradeQuantity;
     };
 }
 
