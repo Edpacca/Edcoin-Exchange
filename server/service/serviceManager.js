@@ -14,13 +14,13 @@ class ServiceManager {
     
         if(!this.#validateOrder) return false;
 
-        debug(`New order: ${newOrder.action} ${newOrder.price} at ${newOrder.quantity}\n\n`);
+        debug(`New order: ${newOrder.action} ${newOrder.price} at ${newOrder.quantity}\n`);
 
         const matchedOrders = new Matcher(this.ordersDb).matchNewOrder(newOrder);
 
         if (!matchedOrders) {
             debug(`No matches found\nAdding new order ${newOrder.id} to database...`)
-            this.ordersDb.push(order);
+            this.ordersDb.push(newOrder);
             return;
         }
 
