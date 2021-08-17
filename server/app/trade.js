@@ -2,7 +2,7 @@ class Trade {
 
     constructor(existingOrder, newOrder) {
 
-        this.tradeTime = new Date(Date.now());
+        this.tradeTime = new Date();
 
         this.existingOrder = existingOrder;
         this.newOrder = newOrder;
