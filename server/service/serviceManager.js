@@ -1,5 +1,5 @@
 const Matcher = require("../app/matcher");
-const Trader = require("../app/trader");
+const trader = require("../app/trader");
 const Order = require("../app/order");
 const debug = require("../../debugLogger");
 const _ = require('lodash'); 
@@ -24,7 +24,7 @@ class ServiceManager {
             return true;
         }
 
-        const trades = new Trader().makeTrades(newOrder, matchedOrders);
+        const trades = trader.makeTrades(newOrder, matchedOrders);
 
         if (newOrder.quantity === 0) {
             debug('New order fulfilled.\n');
