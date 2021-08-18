@@ -1,6 +1,7 @@
 const Trade = require("./trade");
 const debug = require("../../debugLogger");
-class Trader {
+
+const trader = {
 
     makeTrades(newOrder, matchedOrders) {
         debug('Trades completed:\n');
@@ -24,5 +25,5 @@ class Trader {
     }
 }
 
-module.exports = Trader;
+module.exports = trader;
 
