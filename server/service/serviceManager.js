@@ -16,7 +16,7 @@ class ServiceManager {
     handleNewOrder(newOrder) {
         if(!this.validateOrder) return false;
         debug(`New order: ${newOrder.action} ${newOrder.price} at ${newOrder.quantity}\n`);
-        const matchedOrders = matcher.matchNewOrder(newOrder);
+        const matchedOrders = this.matcher.matchNewOrder(newOrder);
 
         if (!matchedOrders) {
             debug(`No matches found\nAdding new order ${newOrder.id} to database...`)
