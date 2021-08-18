@@ -2,8 +2,6 @@ const Trade = require("./trade");
 const debug = require("../../debugLogger");
 class Trader {
 
-    constructor(){}
-
     makeTrades(newOrder, matchedOrders) {
         debug('Trades completed:\n');
         const trades = [];
