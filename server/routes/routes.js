@@ -2,6 +2,7 @@ const _ = require('lodash');
 const Order = require('../app/order');
 const ServiceManager = require('../service/serviceManager');
 const db = require('../db/dbManager');
+const Matcher = require('../app/matcher');
 
 // Temporary location for Db rerences
 const tradesDb = [];
@@ -41,9 +42,10 @@ const appRouter = function(app) {
                 request.body.price,
                 request.body.quantity,
                 request.body.action);
-
-            // pass order to serviceManager which handles matching and trading
-            const serviceManager = new ServiceManager(ordersDb, tradesDb);
+            
+            // instantiate serviceManager with db references and a new matcher
+            // pass new order to serviceManager to handle matching and trading
+            const serviceManager = new ServiceManager(ordersDb, tradesDb, new Matcher(ordersDb));
             serviceManager.handleNewOrder(order);
             result.status(201).send(order);
         }
