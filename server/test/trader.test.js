@@ -16,7 +16,7 @@ describe("TradeManager", () => {
         .toThrow("cannot perform trade between orders with same action");
     });
 
-    it("returns an array of trades", () => {
+    it("returns an array of Trade instances", () => {
         const newOrder = new Order(0, 9, 15, "BUY");
         const matchedOrders = [
             new Order(1, 10, 10, "SELL"),
@@ -24,9 +24,11 @@ describe("TradeManager", () => {
             new Order(3, 6, 10, "SELL")
         ];
         const trader = new Trader();
+        const trades = trader.makeTrades(newOrder, matchedOrders);
 
-        expect(Array.isArray(trader.makeTrades(newOrder, matchedOrders)))
-            .toBe(true);
+        expect(trader.makeTrades(newOrder, matchedOrders)
+                .filter(t => t instanceof(Trade)).length)
+                .toBe(trades.length);
     });
 
     it("makes multiple trades if newOrder is not fulfilled by first trade", () => {
