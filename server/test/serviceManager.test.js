@@ -1,3 +1,4 @@
+const Matcher = require("../app/matcher");
 const Order = require("../app/order");
 const ServiceManager = require("../service/ServiceManager");
 
@@ -13,7 +14,7 @@ describe("ServiceManager", () => {
             new Order(4, 30, 1, "SELL"),
             new Order(5, 40, 1, "SELL"),
         ];
-        const serviceManager = new ServiceManager(orders, []);
+        const serviceManager = new ServiceManager(orders, [], new Matcher(orders));
 
         it("validateOrder returns false if matchNewOrder is passed an invalid order object", () => {
             expect(serviceManager.validateOrder("badOrder")).toBe(false);
@@ -39,7 +40,7 @@ describe("ServiceManager", () => {
                 new Order(0, 20, 1, "BUY"),
                 new Order(1, 30, 1, "BUY"),
             ];
-            const serviceManager = new ServiceManager(orders, []);
+            const serviceManager = new ServiceManager(orders, [], new Matcher(orders));
             const previousDbLength = orders.length;
             serviceManager.handleNewOrder(new Order(1, 10, 1, "BUY"));
             expect(orders.length).toBe(previousDbLength + 1);
@@ -50,7 +51,7 @@ describe("ServiceManager", () => {
                 new Order(0, 20, 1, "SELL"),
                 new Order(1, 30, 1, "SELL"),
             ];
-            const serviceManager = new ServiceManager(orders, []);
+            const serviceManager = new ServiceManager(orders, [], new Matcher(orders));
             const newOrder = new Order(1, 30, 10, "BUY");
             serviceManager.handleNewOrder(newOrder);
             expect(newOrder.quantity === 8 && orders.includes(newOrder)).toBe(true);
@@ -60,7 +61,7 @@ describe("ServiceManager", () => {
             const orders = [
                 new Order(1, 30, 10, "SELL"),
             ];
-            const serviceManager = new ServiceManager(orders, []);
+            const serviceManager = new ServiceManager(orders, [], new Matcher(orders));
             const newOrder = new Order(1, 30, 1, "BUY");
             serviceManager.handleNewOrder(newOrder);
             expect(newOrder.quantity === 0 && orders.includes(newOrder)).toBe(false);
@@ -71,7 +72,7 @@ describe("ServiceManager", () => {
             const orders = [
                 existingOrder
             ];
-            const serviceManager = new ServiceManager(orders, []);
+            const serviceManager = new ServiceManager(orders, [], new Matcher(orders));
             const newOrder = new Order(1, 30, 10, "BUY");
             serviceManager.handleNewOrder(newOrder);
             expect(orders.includes(existingOrder)).toBe(false);
@@ -82,7 +83,7 @@ describe("ServiceManager", () => {
             const orders = [
                 existingOrder
             ];
-            const serviceManager = new ServiceManager(orders, []);
+            const serviceManager = new ServiceManager(orders, [], new Matcher(orders));
             const newOrder = new Order(1, 30, 10, "BUY");
             serviceManager.handleNewOrder(newOrder);
             expect(orders.filter(o => o.quantity === 0).length).toBe(0);
@@ -94,7 +95,7 @@ describe("ServiceManager", () => {
                 new Order(0, 20, 1, "SELL"),
                 new Order(1, 30, 1, "SELL"),
             ];
-            const serviceManager = new ServiceManager(orders, trades);
+            const serviceManager = new ServiceManager(orders, trades, new Matcher(orders));
             const newOrder = new Order(1, 30, 10, "BUY");
             serviceManager.handleNewOrder(newOrder);
             expect(trades.length).toBe(2);
