@@ -6,15 +6,17 @@ const _ = require('lodash');
 
 class ServiceManager { 
 
-    constructor(ordersDb, tradesDb) {
+    // factory function pass matcher
+    constructor(ordersDb, tradesDb, matcher) {
         this.ordersDb = ordersDb;
         this.tradesDb = tradesDb;
+        this.matcher = matcher;
     }
 
     handleNewOrder(newOrder) {
         if(!this.validateOrder) return false;
         debug(`New order: ${newOrder.action} ${newOrder.price} at ${newOrder.quantity}\n`);
-        const matchedOrders = new Matcher(this.ordersDb).matchNewOrder(newOrder);
+        const matchedOrders = matcher.matchNewOrder(newOrder);
 
         if (!matchedOrders) {
             debug(`No matches found\nAdding new order ${newOrder.id} to database...`)
