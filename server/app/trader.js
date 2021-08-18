@@ -12,7 +12,7 @@ class Trader {
                 throw new Error("cannot perform trade between orders with same action");
             }
 
-            let trade = new Trade(matchedOrders[i], newOrder);
+            const trade = new Trade(matchedOrders[i], newOrder);
             trades.push(trade);
 
             debug(`${trade.action} ${trade.quantity} at ${trade.price}`);
