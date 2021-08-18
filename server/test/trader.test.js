@@ -1,4 +1,5 @@
 const Order = require("../app/order");
+const Trade = require("../app/trade");
 const Trader = require("../app/trader");
 
 describe("TradeManager", () => {
@@ -16,19 +17,22 @@ describe("TradeManager", () => {
         .toThrow("cannot perform trade between orders with same action");
     });
 
-    it("returns an array of Trade instances", () => {
+    it("returns expected Trade", () => {
         const newOrder = new Order(0, 9, 15, "BUY");
         const matchedOrders = [
-            new Order(1, 10, 10, "SELL"),
             new Order(2, 8, 10, "SELL"),
-            new Order(3, 6, 10, "SELL")
         ];
+        // very specific: 
         const trader = new Trader();
         const trades = trader.makeTrades(newOrder, matchedOrders);
 
-        expect(trader.makeTrades(newOrder, matchedOrders)
-                .filter(t => t instanceof(Trade)).length)
-                .toBe(trades.length);
+        const expectedResults = {
+            price: 8,
+            quantity: 10
+        }
+
+        expect(trades[0].price).toBe(expectedResults.price);
+        expect(trades[0].quantity).toBe(expectedResults.quantity);
     });
 
     it("makes multiple trades if newOrder is not fulfilled by first trade", () => {
@@ -52,6 +56,7 @@ describe("TradeManager", () => {
         expect(newOrder.quantity).toBe(5);
     });
 
+    // jest check toBe (to equals)
     it("reduces the matched order by the correct amount", () => {
         const newOrder = new Order(0, 10, 10, "BUY");
         const matchedOrders = [ new Order(1, 5, 15, "SELL") ];
