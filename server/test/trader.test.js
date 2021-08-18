@@ -1,6 +1,6 @@
 const Order = require("../app/order");
 const Trade = require("../app/trade");
-const Trader = require("../app/trader");
+const trader = require("../app/trader");
 
 describe("TradeManager", () => {
 
@@ -11,7 +11,6 @@ describe("TradeManager", () => {
             new Order(2, 8, 10, "BUY"),
             new Order(3, 6, 10, "SELL"),
         ];
-        const trader = new Trader();
 
         expect(() => {trader.makeTrades(newOrder, matchedOrders)})
         .toThrow("cannot perform trade between orders with same action");
@@ -22,8 +21,7 @@ describe("TradeManager", () => {
         const matchedOrders = [
             new Order(2, 8, 10, "SELL"),
         ];
-        // very specific: 
-        const trader = new Trader();
+
         const trades = trader.makeTrades(newOrder, matchedOrders);
 
         const expectedResults = {
@@ -42,7 +40,6 @@ describe("TradeManager", () => {
             new Order(2, 8, 10, "SELL"),
             new Order(3, 6, 10, "SELL")
         ];
-        const trader = new Trader();
 
         expect(trader.makeTrades(newOrder, matchedOrders).length).toBe(2);
     });
@@ -50,7 +47,6 @@ describe("TradeManager", () => {
     it("reduces the new order by the correct amount", () => {
         const newOrder = new Order(0, 10, 15, "BUY");
         const matchedOrders = [ new Order(1, 5, 10, "SELL") ];
-        const trader = new Trader();
         trader.makeTrades(newOrder, matchedOrders);
 
         expect(newOrder.quantity).toBe(5);
@@ -60,7 +56,6 @@ describe("TradeManager", () => {
     it("reduces the matched order by the correct amount", () => {
         const newOrder = new Order(0, 10, 10, "BUY");
         const matchedOrders = [ new Order(1, 5, 15, "SELL") ];
-        const trader = new Trader();
         trader.makeTrades(newOrder, matchedOrders);
 
         expect(matchedOrders[0].quantity).toBe(5);
