@@ -39,15 +39,19 @@ describe("Matcher", () => {
 
     describe("matchNewOrder", () => {
 
-        it("returns empty array if no matches are found", () => {
+        it("returns false if no matches are found", () => {
             // all sell orders are above 10
             let order = new Order(1, 10, 1, "BUY");
             expect(matcher.matchNewOrder(order)).toBe(false);
         });
     
-        it("returns an array if passed a valid Order with matches", () => {
+        it("returns the correct matches if passed a valid Order", () => {
             let order = new Order(1, 30, 1, "BUY");
-            expect(Array.isArray(matcher.matchNewOrder(order))).toBe(true);
+            let matches = matcher.matchNewOrder(order);
+            expect(matches[0]).toBe(orders[4]);
+            expect(matches[1]).toBe(orders[3]);
+            expect(matches[2]).toBe(undefined);
+
         });
     
         if("returns false if passed an empty database", () => {
