@@ -18,7 +18,7 @@ class Trader {
             debug(`${trade.action} ${trade.quantity} at ${trade.price}`);
             debug(`${trade.orderId1} -> ${trade.orderId2}\n`);
 
-            if (newOrder.quantity == 0) return trades;
+            if (newOrder.quantity === 0) return trades;
         }
         return trades;
     }
