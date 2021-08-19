@@ -1,10 +1,11 @@
-const mockOrders = require("./mockOrders");
+import { getMockOrders } from './mockOrders';
+import { Order } from '../app/Order'
 
-let ordersDb = [];
+let ordersDb: Order[] = [];
 let isDbInitialised = false;
 
 function initialiseDb() {
-    ordersDb = mockOrders.getOrders();
+    ordersDb = getMockOrders();
     isDbInitialised = true;
     return ordersDb;
 }
@@ -13,10 +14,8 @@ function aggregateOrders() {
 
 }
 
-function getOrders() {
+export function getOrders() {
     return isDbInitialised 
         ? ordersDb 
         : initialiseDb();
 }
-
-module.exports = { getOrders, aggregateOrders } ;

@@ -1,16 +1,13 @@
-const Matcher = require("../app/matcher");
-const Order = require("../app/order");
-const ServiceManager = require("../service/ServiceManager");
+import { Matcher } from "../app/matcher";
+import { Order } from "../app/order";
+import { Trade } from "../app/trade";
+import { ServiceManager } from "../service/ServiceManager";
 
 describe("ServiceManager", () => {
  
     describe("validate order", () => {
 
         const serviceManager = new ServiceManager([], [], new Matcher([]));
-
-        it("validateOrder returns false if matchNewOrder is passed an invalid order object", () => {
-            expect(serviceManager.validateOrder("badOrder")).toBe(false);
-        });
     
         it("validateOrder returns false if the order object has invalid action", () => {
             expect(serviceManager.validateOrder(new Order(1, 1, 1, "INVALID_ACTION"))).toBe(false);
@@ -27,16 +24,12 @@ describe("ServiceManager", () => {
 
     describe("handleNewOrder", () => {
 
-        it("adds the new order to the database if no matches are found", () => {
-            const orders = [];
-            const newOrder = new Order(1, 10, 1, "BUY");
-            const mockMatcher = {
-                matchNewOrder(order) {
-                    return [];
-                }
-            };
+        const createMatcher = (orders: Order[]) => (<Matcher><unknown>{ matchNewOrder: (order: Order) => orders });
 
-            const serviceManager = new ServiceManager(orders, [], mockMatcher);
+        it("adds the new order to the database if no matches are found", () => {
+            const orders: Order[] = [];
+            const newOrder = new Order(1, 10, 1, "BUY");
+            const serviceManager = new ServiceManager(orders, [], createMatcher(orders));
             serviceManager.handleNewOrder(newOrder);
             expect(orders.includes(newOrder)).toBe(true);
         });
@@ -46,12 +39,8 @@ describe("ServiceManager", () => {
                 new Order(0, 20, 1, "SELL"),
                 new Order(1, 30, 1, "SELL"),
             ];
-            const mockMatcher = {
-                matchNewOrder(order) {
-                    return orders;
-                }
-            };
-            const serviceManager = new ServiceManager(orders, [], mockMatcher);
+
+            const serviceManager = new ServiceManager(orders, [], createMatcher(orders));
             const newOrder = new Order(1, 30, 10, "BUY");
             serviceManager.handleNewOrder(newOrder);
             expect(newOrder.quantity === 8 && orders.includes(newOrder)).toBe(true);
@@ -61,12 +50,8 @@ describe("ServiceManager", () => {
             const orders = [
                 new Order(1, 30, 10, "SELL"),
             ];
-            const mockMatcher = {
-                matchNewOrder(order) {
-                    return orders;
-                }
-            };
-            const serviceManager = new ServiceManager(orders, [], mockMatcher);
+
+            const serviceManager = new ServiceManager(orders, [], createMatcher(orders));
             const newOrder = new Order(1, 30, 1, "BUY");
             serviceManager.handleNewOrder(newOrder);
             expect(newOrder.quantity === 0 && orders.includes(newOrder)).toBe(false);
@@ -77,12 +62,8 @@ describe("ServiceManager", () => {
             const orders = [
                 existingOrder
             ];
-            const mockMatcher = {
-                matchNewOrder(order) {
-                    return orders;
-                }
-            };
-            const serviceManager = new ServiceManager(orders, [], mockMatcher);
+
+            const serviceManager = new ServiceManager(orders, [], createMatcher(orders));
             const newOrder = new Order(1, 30, 10, "BUY");
             serviceManager.handleNewOrder(newOrder);
             expect(orders.includes(existingOrder)).toBe(false);
@@ -95,29 +76,21 @@ describe("ServiceManager", () => {
                 new Order(0, 20, 0, "SELL"),
                 new Order(0, 20, 0, "SELL"),
             ];
-            const mockMatcher = {
-                matchNewOrder(order) {
-                    return orders;
-                }
-            };
-            const serviceManager = new ServiceManager(orders, [], mockMatcher);
+
+            const serviceManager = new ServiceManager(orders, [], createMatcher(orders));
             const newOrder = new Order(1, 30, 10, "BUY");
             serviceManager.handleNewOrder(newOrder);
             expect(orders.filter(o => o.quantity === 0).length).toBe(0);
         });
 
         it("adds each trade to the tradesDb after successful trade", () => {
-            const trades = []
+            const trades: Trade[] = []
             const orders = [
                 new Order(0, 20, 1, "SELL"),
                 new Order(1, 30, 1, "SELL"),
             ];
-            const mockMatcher = {
-                matchNewOrder(order) {
-                    return orders;
-                }
-            };
-            const serviceManager = new ServiceManager(orders, trades, mockMatcher);
+
+            const serviceManager = new ServiceManager(orders, trades, createMatcher(orders));
             const newOrder = new Order(1, 30, 10, "BUY");
             serviceManager.handleNewOrder(newOrder);
             expect(trades.length).toBe(2);
