@@ -1,28 +1,21 @@
-const Order = require("../app/order");
-
 class Trade {
 
     constructor(existingOrder, newOrder) {
+        this.time = new Date();
+        this.price = existingOrder.price;
+        this.quantity = Math.min(
+            existingOrder.quantity, newOrder.quantity);
+        this.action = existingOrder.action;
+        this.orderId1 = existingOrder.id;
+        this.orderId2 = newOrder.id;
 
-        this.orders = [
-            this.existingOrder = existingOrder,
-            this.newOrder = newOrder,
-        ];
+        this.#makeTrade(existingOrder, newOrder);
+    }
 
-        this.tradeTime = Date.now();
-        this.tradePrice = this.existingOrder.price;
-        this.tradeQuantity = Math.min(
-            this.existingOrder.quantity, this.newOrder.quantity);
-
-        this.makeTrade();
-    };
-
-    makeTrade(){
-
-        this.orders.forEach(order => {
-            order.quantity -= this.tradeQuantity;
-        });
-    };
+    #makeTrade(existingOrder, newOrder){
+        existingOrder.quantity -= this.quantity;
+        newOrder.quantity -= this.quantity;
+    }
 }
 
 module.exports = Trade;
