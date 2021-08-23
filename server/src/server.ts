@@ -11,7 +11,7 @@ routes(app);
 
 // todo rename variables
 const server = app.listen(3000, function () {
-    const b = server?.address();
-    const c = _.isString(b) ? b : b?.port;
-    console.log(`bitcoin trading app running on port ${c}\n`);
+    const address = server?.address();
+    const port = _.isString(address) ? address : address?.port;
+    console.log(`bitcoin exchange running on port ${port}\n`);
 });
