@@ -1,5 +1,5 @@
-const Matcher = require("../app/matcher");
-const Order = require("../app/order");
+import { Matcher } from "../app/matcher";
+import { Order } from "../app/order";
 
 describe("Matcher", () => {
 
@@ -39,10 +39,10 @@ describe("Matcher", () => {
 
     describe("matchNewOrder", () => {
 
-        it("returns false if no matches are found", () => {
+        it("returns an empty array if no matches are found", () => {
             // all sell orders are above 10
             let order = new Order(1, 10, 1, "BUY");
-            expect(matcher.matchNewOrder(order)).toBe(false);
+            expect(matcher.matchNewOrder(order)).toEqual([]);
         });
     
         it("returns the correct matches if passed a valid Order", () => {
@@ -54,17 +54,16 @@ describe("Matcher", () => {
 
         });
     
-        if("returns false if passed an empty database", () => {
-            matcher = new Matcher([]);
-            expect(matcher.matchNewOrder(new Order(1, 1, 1, "SELL"))).toBe(false);    
+        it("returns an empty array if passed an empty database", () => {
+            expect(new Matcher([]).matchNewOrder(new Order(1, 1, 1, "SELL"))).toEqual([]);    
         });
     
     });
 
     describe("getPotentialMatches", () => {
 
-        it("returns false if there are no potential matches", () => {
-            expect(matcher.getPotentialMatches(new Order(1, 100, 1, "SELL"))).toBe(false);
+        it("returns empty array if there are no potential matches", () => {
+            expect(matcher.getPotentialMatches(new Order(1, 100, 1, "SELL"))).toEqual([]);
         });
 
         it("returns an array of orders in descending price when passed a BUY order", () => {

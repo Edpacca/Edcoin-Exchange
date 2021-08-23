@@ -1,7 +1,5 @@
 const isDebugActive = false;
 
-function debug(message) {
+export function debug(message: string): void {
     if (isDebugActive) console.log(message);
 }
-
-module.exports = debug;

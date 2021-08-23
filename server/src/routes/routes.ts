@@ -1,14 +1,16 @@
-const _ = require('lodash'); 
-const Order = require('../app/order');
-const ServiceManager = require('../service/serviceManager');
-const db = require('../db/dbManager');
-const Matcher = require('../app/matcher');
+import * as _ from 'lodash';
+import { ServiceManager } from '../service/serviceManager';
+import { Order } from '../app/order';
+import { Trade } from '../app/trade';
+import { Matcher } from '../app/matcher';
+import { getOrders } from '../db/dbManager';
+import * as express from 'express';
 
 // Temporary location for Db rerences
-const tradesDb = [];
-const ordersDb = db.getOrders();
+const tradesDb: Trade[] = [];
+const ordersDb: Order[] = getOrders();
 
-const appRouter = function(app) {
+export function appRouter(app: express.Express): void {
 
     // GET all orders unsorted
     app.get("/orders", (request, result) => {
@@ -51,5 +53,3 @@ const appRouter = function(app) {
         }
     });
 }
-
-module.exports = appRouter;

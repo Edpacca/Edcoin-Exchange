@@ -1,15 +1,16 @@
-class Matcher {
+import { Order } from "./order";
 
-    constructor(ordersDb) {
-        this.orders = ordersDb;
+export class Matcher {
+
+    constructor(readonly orders: Order[]) {
     }
 
-    matchNewOrder(newOrder) {
-        if (this.orders.length === 0) return false;
+    matchNewOrder(newOrder: Order): Order[] {
+        if (this.orders.length === 0) return [];
         return this.getPotentialMatches(newOrder);
     }
 
-    getPotentialMatches(newOrder) {
+    getPotentialMatches(newOrder: Order): Order[] {
         let potentialMatches = this.filterOrders(newOrder.action);
 
         if (newOrder.action === "BUY") {
@@ -20,10 +21,10 @@ class Matcher {
             potentialMatches.sort((a, b) => (a.price - b.price));
         }
 
-        return potentialMatches.length === 0 ? false : potentialMatches;
+        return potentialMatches;
     }
 
-    filterOrders(action) {
+    filterOrders(action: string): Order[] {
         const opposingAction = action === "BUY" 
             ? "SELL" 
             : "BUY";
@@ -31,5 +32,3 @@ class Matcher {
         return this.orders.filter(o => o.action == opposingAction);
     }
 }
-
-module.exports = Matcher;

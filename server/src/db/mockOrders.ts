@@ -1,7 +1,6 @@
-const Order = require("../app/order");
+import { Order } from "../app/order";
 
-function getOrder(action = "BUY") {
-
+export function getMockOrder(action: string = "BUY" ): boolean | Order {
     if (action !== "BUY" && action !== "SELL") {
         return false;
     }
@@ -13,8 +12,8 @@ function getOrder(action = "BUY") {
 }
 
 // generates an equal amount of orders with opposing actions
-function getOrders(maxOrders = 5) {
-    let orders = [];
+export function getMockOrders(maxOrders: number = 5): Order[] {
+    let orders: Order[] = [];
     for (let i = 0; i < maxOrders * 2; i++) {
         let action = i < maxOrders ? "SELL" : "BUY";
         let newOrder = new Order(
@@ -27,14 +26,12 @@ function getOrders(maxOrders = 5) {
     return orders;
 }
 
-function getRandomArbitrary(min, max) {
+function getRandomArbitrary(min: number, max: number): number {
     return Math.random() * (max - min) + min;
 }
 
-function getRandomInt(min, max) {
+function getRandomInt(min: number, max: number): number {
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min) + min);
 }
-
-module.exports = { getOrder, getOrders };

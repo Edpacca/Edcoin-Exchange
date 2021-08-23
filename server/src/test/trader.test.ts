@@ -1,6 +1,6 @@
-const Order = require("../app/order");
-const Trade = require("../app/trade");
-const trader = require("../app/trader");
+import { Order } from "../app/order";
+import { Trade } from "../app/trade";
+import { makeTrades } from "../app/trader";
 
 describe("TradeManager", () => {
 
@@ -12,7 +12,7 @@ describe("TradeManager", () => {
             new Order(3, 6, 10, "SELL"),
         ];
 
-        expect(() => {trader.makeTrades(newOrder, matchedOrders)})
+        expect(() => {makeTrades(newOrder, matchedOrders)})
         .toThrow("cannot perform trade between orders with same action");
     });
 
@@ -22,7 +22,7 @@ describe("TradeManager", () => {
             new Order(2, 8, 10, "SELL"),
         ];
 
-        const trades = trader.makeTrades(newOrder, matchedOrders);
+        const trades = makeTrades(newOrder, matchedOrders);
 
         const expectedResults = {
             price: 8,
@@ -41,22 +41,21 @@ describe("TradeManager", () => {
             new Order(3, 6, 10, "SELL")
         ];
 
-        expect(trader.makeTrades(newOrder, matchedOrders).length).toBe(2);
+        expect(makeTrades(newOrder, matchedOrders).length).toBe(2);
     });
 
     it("reduces the new order by the correct amount", () => {
         const newOrder = new Order(0, 10, 15, "BUY");
         const matchedOrders = [ new Order(1, 5, 10, "SELL") ];
-        trader.makeTrades(newOrder, matchedOrders);
+        makeTrades(newOrder, matchedOrders);
 
         expect(newOrder.quantity).toBe(5);
     });
 
-    // jest check toBe (to equals)
     it("reduces the matched order by the correct amount", () => {
         const newOrder = new Order(0, 10, 10, "BUY");
         const matchedOrders = [ new Order(1, 5, 15, "SELL") ];
-        trader.makeTrades(newOrder, matchedOrders);
+        makeTrades(newOrder, matchedOrders);
 
         expect(matchedOrders[0].quantity).toBe(5);
     });

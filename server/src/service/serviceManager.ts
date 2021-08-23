@@ -1,30 +1,30 @@
-const Matcher = require("../app/matcher");
-const trader = require("../app/trader");
-const Order = require("../app/order");
-const debug = require("../../debugLogger");
-const _ = require('lodash'); 
+import * as _ from 'lodash'; 
+import { Matcher } from "../app/matcher";
+import { Order } from "../app/order";
+import { Trade } from "../app/trade";
+import { makeTrades } from "../app/trader";
+import { debug } from "../debugLogger";
 
-class ServiceManager { 
 
-    // factory function pass matcher
-    constructor(ordersDb, tradesDb, matcher) {
-        this.ordersDb = ordersDb;
-        this.tradesDb = tradesDb;
-        this.matcher = matcher;
+
+export class ServiceManager { 
+
+
+    constructor(readonly ordersDb: Order[], readonly tradesDb: Trade[], readonly matcher: Matcher) {
     }
 
-    handleNewOrder(newOrder) {
+    handleNewOrder(newOrder: Order): boolean {
         if(!this.validateOrder) return false;
         debug(`New order: ${newOrder.action} ${newOrder.price} at ${newOrder.quantity}\n`);
         const matchedOrders = this.matcher.matchNewOrder(newOrder);
 
-        if (!matchedOrders) {
+        if (matchedOrders.length === 0) {
             debug(`No matches found\nAdding new order ${newOrder.id} to database...`)
             this.ordersDb.push(newOrder);
             return true;
         }
 
-        const trades = trader.makeTrades(newOrder, matchedOrders);
+        const trades = makeTrades(newOrder, matchedOrders);
 
         if (newOrder.quantity === 0) {
             debug('New order fulfilled.\n');
@@ -38,11 +38,7 @@ class ServiceManager {
         return true;
     }
 
-    validateOrder(newOrder) {
-        if (!(newOrder instanceof Order)) {
-            debug("new order is of invalid type");
-            return false;
-        } 
+    validateOrder(newOrder: Order): boolean {
         if (newOrder.action !== "BUY" && newOrder.action !== "SELL") {
             debug("new order does not have valid BUY/SELL action");
             return false;
@@ -50,5 +46,3 @@ class ServiceManager {
         return true;
     }
 }
-
-module.exports = ServiceManager;
