@@ -1,15 +1,17 @@
 import React from 'react';
-import logo from './logo.svg';
-import { Counter } from './features/counter/Counter';
 import './App.css';
+import { OrderUI } from './features/orderer/Orderer';
+import { UserOrders } from './features/userAccount/UserOrders';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <Counter />
-      </header>
+    <div className="split-sections">
+      <div className="App">
+          <OrderUI />
+      </div>
+      <div>
+        <UserOrders />
+      </div>
     </div>
   );
 }
