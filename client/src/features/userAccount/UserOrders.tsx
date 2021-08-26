@@ -37,15 +37,12 @@ const mockOrders = [
 
 export function UserOrders() {
     
-    const orders: any = [];
-
-    mockOrders.forEach(order => {
-        
-        const orderDetails = <li className="table-list">{RenderOrderDetails(order)}</li>
-        orders.push(orderDetails);
-    })
+    const orders = mockOrders.map(o => <li className="table-list">{RenderOrderDetails(o)}</li>);
     
     return (
-        <ol>{orders}</ol>
+        <div>
+            <h3>MY ORDERS</h3>
+            <ol>{orders}</ol>
+        </div>
     )
 }
