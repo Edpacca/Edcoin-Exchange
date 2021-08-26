@@ -1,4 +1,4 @@
-import { BuySellToggle } from './buySellToggle';
+import { BuySellToggle } from './BuySellToggle';
 import { Button } from '@material-ui/core';
 import { v4 as uuid } from 'uuid';
 
@@ -7,7 +7,7 @@ const mockOrder = {
     orderTime: new Date(),
     account: 99,
     price: 20,
-    action: "BUY",
+    direction: "BUY",
     quantity: 5,
 }
 
