@@ -1,8 +1,8 @@
 import { DirectionType } from "../models/directionType";
 import { Order } from "../models/order";
+import { RootState } from "./store";
 
-export const initialState: Order[] =
-    [
+export const initialState: Order[] = [
         {
             orderTime: new Date(),
             id: "f9a40020-2e52-473b-92de-2d65d3c6d774",
@@ -37,19 +37,25 @@ export const initialState: Order[] =
         },
     ]
 
-export type RootState = ReturnType<typeof orderSlice>
+export type OrderSliceState = ReturnType<typeof orderSlice>
 
 export default function orderSlice(state = initialState, action: {type: string, payload?: Order | string}) {
 
     switch (action.type) {
         case 'orders/orderCreated': {
+            if (typeof action.payload !== 'object'){
+                return state;
+            }
+            
             return [
-                ...state,
-                action.payload as Order
-            ]
+                    ...state,
+                    action.payload as Order
+                ]
         }
         case 'orders/orderDeleted': {
-            return state;
+            return [
+                ...state.filter(o => o.id !== action.payload)
+            ]
         }
         case 'orders/orderUpdated': {
             return state;
@@ -58,3 +64,5 @@ export default function orderSlice(state = initialState, action: {type: string, 
             return state;
     }
 }
+
+export const selectOrders = (state: RootState) => state.orders;
