@@ -1,17 +1,15 @@
 import React from 'react';
 import './App.css';
-import { OrderUI } from './features/orderer/Orderer';
-import { UserOrders } from './features/userAccount/UserOrders';
+import logo from './logo.svg';
+import { Navbar } from './features/navigation/Navbar';
 
 function App() {
   return (
-    <div className="split-sections">
-      <div className="App">
-          <OrderUI />
-      </div>
-      <div>
-        <UserOrders />
-      </div>
+    <div className="App">
+        <img src={logo} className="App-logo" alt="logo" />
+        <div className="App-function">
+          <Navbar />
+        </div>
     </div>
   );
 }
