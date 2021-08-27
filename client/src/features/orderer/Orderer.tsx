@@ -4,12 +4,14 @@ import { Order } from '../../models/order'
 import { DirectionType } from '../../models/directionType';
 import { useState } from 'react';
 import { Slider } from '@material-ui/core';
+import { useDispatch } from 'react-redux';
 
 export function OrderUI() {
 
     const [isBuying, setIsBuying] = useState<boolean>(true);
     const [price, setPrice] = useState<number>(50);
     const [quantity, setQuantity] = useState<number>(1);
+    const dispatch = useDispatch();
 
     const setDirection = () => {
         setIsBuying(!isBuying);
@@ -25,14 +27,9 @@ export function OrderUI() {
         setPrice(value as number);
     }
 
-    const handleInputPriceChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    }
-    const handleInputQuantityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    }
-
     const submit = () => {
         const mockOrder: Order = {
-            id: undefined,
+            id: `testId-${price}-${new Date()}-aszkr032-c1-df12d`,
             orderTime: new Date(),
             account: 99,
             price: price,
@@ -41,6 +38,7 @@ export function OrderUI() {
                 : DirectionType.Sell,
             quantity: quantity,
         }
+        dispatch({type: "orders/orderCreated", payload: mockOrder});
     }
 
     const orderSummary: string = `${quantity} at $${price.toFixed(2)}`;
@@ -48,12 +46,9 @@ export function OrderUI() {
 
     return (
         <div>
-            <div><h3>PLACE NEW ORDER</h3></div>
+            <br/>
             <div className="slider">
-                <input
-                    placeholder="SET PRICE"
-                    onChange={handleInputPriceChange}
-                />
+                <div><h4>PRICE</h4></div>
                 <Slider
                     defaultValue={15.00}
                     step={0.01}
@@ -64,10 +59,7 @@ export function OrderUI() {
                 />
             </div>
             <div className="slider">
-                <input
-                    placeholder="SET QUANTITY"
-                    onChange={handleInputQuantityChange}
-                />
+            <div><h4>QUANTITY</h4></div>
                 <Slider
                     defaultValue={1}
                     step={1}
@@ -78,15 +70,21 @@ export function OrderUI() {
                     onChange={handleQuantityChange}
                 />
             </div>
+            <br/>
             <div><BuySellToggle 
                 isBuying={isBuying}
                 onClick={setDirection}
             /></div>
+            <br/>
             <div>
                 <h3>{orderMessage}</h3>
                 <h3>Total: ${(quantity * price).toFixed(2)}</h3>
             </div>
-            <div><Button onClick={submit}>SUBMIT</Button></div>
+            <div><button 
+            onClick={submit}
+            className="button-selected submit"
+            >SUBMIT</button></div>
+            <br/>
         </div>
     )
 }
