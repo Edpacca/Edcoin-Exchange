@@ -1,7 +1,8 @@
 import { DirectionType } from "../models/directionType";
 import { Order } from "../models/order";
 
-export const initialState: Order[] = [
+export const initialState: Order[] =
+    [
         {
             orderTime: new Date(),
             id: "f9a40020-2e52-473b-92de-2d65d3c6d774",
@@ -36,13 +37,16 @@ export const initialState: Order[] = [
         },
     ]
 
-export type RootState = ReturnType<typeof ordersReducer>
+export type RootState = ReturnType<typeof orderSlice>
 
-export default function ordersReducer(state = initialState, action: any) {
+export default function orderSlice(state = initialState, action: {type: string, payload?: Order | string}) {
 
     switch (action.type) {
         case 'orders/orderCreated': {
-            return state;
+            return [
+                ...state,
+                action.payload as Order
+            ]
         }
         case 'orders/orderDeleted': {
             return state;
