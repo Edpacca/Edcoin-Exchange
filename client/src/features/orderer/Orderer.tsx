@@ -1,9 +1,8 @@
 import { BuySellToggle } from './BuySellToggle';
 import { Button } from '@material-ui/core';
-import { v4 as uuid } from 'uuid';
 import { Order } from '../../models/order'
 import { DirectionType } from '../../models/directionType';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Slider } from '@material-ui/core';
 
 export function OrderUI() {
@@ -33,7 +32,7 @@ export function OrderUI() {
 
     const submit = () => {
         const mockOrder: Order = {
-            id: uuid(),
+            id: undefined,
             orderTime: new Date(),
             account: 99,
             price: price,
@@ -44,8 +43,8 @@ export function OrderUI() {
         }
     }
 
-    const orderSummary: string = quantity + " at $" + price.toFixed(2);
-    const orderMessage: string = isBuying ? "BUYING " + orderSummary: "SELLING " + orderSummary;
+    const orderSummary: string = `${quantity} at $${price.toFixed(2)}`;
+    const orderMessage: string = isBuying ? `BUY ${orderSummary}`: `SELL ${orderSummary}`;
 
     return (
         <div>
@@ -85,6 +84,7 @@ export function OrderUI() {
             /></div>
             <div>
                 <h3>{orderMessage}</h3>
+                <h3>Total: ${(quantity * price).toFixed(2)}</h3>
             </div>
             <div><Button onClick={submit}>SUBMIT</Button></div>
         </div>
