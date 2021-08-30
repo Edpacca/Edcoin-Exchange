@@ -1,23 +1,21 @@
 import React from "react";
-import { Tab, Tabs, Paper, makeStyles } from '@material-ui/core';
+import { Tab, Tabs, Paper } from '@material-ui/core';
 import { AccountBalanceWallet, ListAlt, MonetizationOn } from "@material-ui/icons";
-import { OrderUI } from '../orderer/Orderer';
+import { OrderMaker } from '../orderMaker/OrderMaker';
 import { Counter } from '../counter/Counter';
-import { UserOrders } from '../userAccount/UserOrders';
 import { ThemeProvider } from '@material-ui/core/styles';
-import { AppTheme } from '../../themes/mainTheme';
-import { OrderBrowser } from "../userAccount/OrderBrowser";
-
+import { AppTheme } from '../../themes/theme';
+import { OrderBrowser } from "../orderBooks/OrderBrowser";
 
 const pages = [
-    <OrderUI />,
-    <OrderBrowser />,
-    <Counter />
+    <OrderMaker/>,
+    <OrderBrowser/>,
+    <Counter/>
 ]
 
 let activeTab = pages[0]
 
-export function Navbar() {
+export function UserNavbar() {
 
     const [value, setValue] = React.useState(0);
 
@@ -39,7 +37,7 @@ export function Navbar() {
             >
                 <Tab icon={<MonetizationOn />} label="NEW ORDER" />
                 <Tab icon={<ListAlt />} label="ACTIVE ORDERS" />
-                <Tab icon={<AccountBalanceWallet />} label="TRADE HISTORY" />
+                <Tab icon={<AccountBalanceWallet />} label="MY TRADES" />
             </Tabs>
             <div>
                 {activeTab}
