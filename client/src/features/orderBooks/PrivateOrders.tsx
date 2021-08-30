@@ -1,14 +1,14 @@
 import { RenderOrderDetails } from "./OrderDetails";
-import { useDispatch } from "react-redux";
 import { Button } from "@material-ui/core";
 import { Order } from "../../models/order";
+import { deleteOrder } from "../../app/orderSlice";
+import { useAppDispatch } from "../../app/hooks";
 
-
-export function UserOrders(props: {orders: Order[]}) {
-    const dispatch = useDispatch();
+export function PrivateOrders(props: {orders: Order[]}) {
+    const dispatch = useAppDispatch();
 
     const handleClickDelete = (id: string) => {
-        dispatch({type: "orders/orderDeleted", payload: id});
+        dispatch(deleteOrder(id));
     }
 
     const renderedOrders = props.orders.map((o) => 

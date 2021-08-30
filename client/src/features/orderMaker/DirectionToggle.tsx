@@ -1,6 +1,6 @@
-import React, { MouseEventHandler } from 'react';
+import { MouseEventHandler } from 'react';
 
-export function BuySellToggle(props: {isBuying: boolean, onClick: MouseEventHandler}) {
+export function DirectionToggle(props: {isBuying: boolean, onClick: MouseEventHandler}) {
     
     return(
         <div className="toggle-buttons">
