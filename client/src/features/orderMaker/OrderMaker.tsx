@@ -1,21 +1,18 @@
-import { BuySellToggle } from './BuySellToggle';
-import { Button } from '@material-ui/core';
+import { DirectionToggle } from './DirectionToggle';
 import { Order } from '../../models/order'
 import { DirectionType } from '../../models/directionType';
 import { useState } from 'react';
 import { Slider } from '@material-ui/core';
 import { useDispatch } from 'react-redux';
 
-export function OrderUI() {
+export function OrderMaker() {
 
     const [isBuying, setIsBuying] = useState<boolean>(true);
     const [price, setPrice] = useState<number>(50);
     const [quantity, setQuantity] = useState<number>(1);
-    const dispatch = useDispatch();
 
-    const setDirection = () => {
-        setIsBuying(!isBuying);
-    }
+    const dispatch = useDispatch();
+    const setDirection = () => setIsBuying(!isBuying);
 
     const handleQuantityChange = (event: React.ChangeEvent<{}>, value: number | number[]) => {
         if(Array.isArray(value)) return;
@@ -29,7 +26,7 @@ export function OrderUI() {
 
     const submit = () => {
         const mockOrder: Order = {
-            id: `testId-${price}-${new Date()}-aszkr032-c1-df12d`,
+            id: "changeme",
             orderTime: new Date(),
             account: 99,
             price: price,
@@ -50,7 +47,6 @@ export function OrderUI() {
             <div className="slider">
                 <div><h4>PRICE</h4></div>
                 <Slider
-                    defaultValue={15.00}
                     step={0.01}
                     min={0.00}
                     max={100}
@@ -61,7 +57,6 @@ export function OrderUI() {
             <div className="slider">
             <div><h4>QUANTITY</h4></div>
                 <Slider
-                    defaultValue={1}
                     step={1}
                     min={1}
                     max={100}
@@ -71,7 +66,7 @@ export function OrderUI() {
                 />
             </div>
             <br/>
-            <div><BuySellToggle 
+            <div><DirectionToggle 
                 isBuying={isBuying}
                 onClick={setDirection}
             /></div>
