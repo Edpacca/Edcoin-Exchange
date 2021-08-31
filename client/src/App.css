@@ -7,6 +7,7 @@
   pointer-events: none;
 }
 
+
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-float infinite 3s ease-in-out;
@@ -36,4 +37,27 @@
   100% {
     transform: translateY(0px);
   }
+}
+
+
+.split-sections {
+  display: grid;
+  grid-template-columns: 50% 50%;
+
+}
+
+.table-label {
+  font-weight: bold;
+  padding-right: 1em;
+}
+
+.table-list {
+  border: 1px solid;
+  padding: 0.5rem;
+
+}
+
+.table-order {
+  border-collapse: collapse;
+
 }
