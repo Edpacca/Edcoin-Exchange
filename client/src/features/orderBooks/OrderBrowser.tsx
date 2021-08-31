@@ -13,7 +13,7 @@ export function OrderBrowser() {
     const [quantity, setQuantity] = useState<number[]>([1, 100]);
     const [searchType, setSearchType] = useState<string>('all');
 
-    const handlePriceChange = (event: any, newValue: number | number[]) => {
+    const handlePriceChange = (event: React.ChangeEvent<{}>, newValue: number | number[]) => {
         const range = newValue as number[]
         setPrice(range);
         setOrders(stateOrders.filter(
@@ -23,7 +23,7 @@ export function OrderBrowser() {
                 range[1])));
     };
 
-    const handleQuantityChange = (event: any, newValue: number | number[]) => {
+    const handleQuantityChange = (event: React.ChangeEvent<{}>, newValue: number | number[]) => {
         const range = newValue as number[]
         setQuantity(range as number[]);
         setOrders(stateOrders.filter(
