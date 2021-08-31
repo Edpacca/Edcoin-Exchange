@@ -3,28 +3,24 @@
 }
 
 .App-logo {
-  height: 40vmin;
+  height: 20vmin;
   pointer-events: none;
+  margin: 1em;
 }
-
 
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
-    animation: App-logo-float infinite 3s ease-in-out;
+    animation: App-logo-spin infinite 10s linear;
   }
 }
 
-.App-header {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-}
-
-.App-link {
-  color: rgb(112, 76, 182);
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(360deg);
+  }
+  to {
+    transform: rotate(0deg);
+  }
 }
 
 @keyframes App-logo-float {
@@ -39,6 +35,26 @@
   }
 }
 
+.App-header {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+}
+
+.App-function {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+}
+
+.App-link {
+  color: rgb(112, 76, 182);
+}
 
 .split-sections {
   display: grid;
@@ -49,15 +65,65 @@
 .table-label {
   font-weight: bold;
   padding-right: 1em;
+  color:rgb(255, 166, 0)
 }
 
 .table-list {
-  border: 1px solid;
-  padding: 0.5rem;
+  padding: 1.5rem;
+  padding-top: 0.5rem;
+  list-style: none;
+}
 
+.table-list-item {
+  border: 0.5px solid rgb(49, 49, 49);
+  padding: 0.5rem;
 }
 
 .table-order {
   border-collapse: collapse;
+  text-align: left;
+}
 
+.button-selected {
+  font-weight: bold;
+  color: rgb(255, 166, 0);
+  background-color: rgb(49, 49, 49);
+  border: 2px, rgb(255, 166, 0);
+}
+
+.button-unselected {
+  color: rgb(66, 66, 66);
+  background-color: rgb(49, 49, 49);
+}
+
+.buysellbutton {
+  width: 60px;
+  height: 35px;
+  border-radius: 10px;
+}
+
+.submit {
+  width: 100px;
+  height: 45px;
+  border-radius: 14px;
+  border: none;
+}
+
+.slider {
+  margin: auto;
+  width: 25em;
+}
+
+.filter-grid-main {
+  display: grid;
+  grid-template-columns: 2fr 2fr 2fr 5fr 1fr;
+
+}
+
+.r-align {
+  text-align: right;
+}
+
+.l-align {
+  text-align: left;
 }

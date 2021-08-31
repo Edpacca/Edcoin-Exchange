@@ -1,8 +1,14 @@
-import { DirectionType } from "../models/directionType";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { RootState } from "./store";
 import { Order } from "../models/order";
+import { DirectionType } from '../models/directionType';
+export interface OrdersState {
+    orders: Order[];
+    status: 'idle' | 'loading' | 'failed';
+}
 
-export const initialState: Order[] =
-    [
+export const initialState: OrdersState = {
+    orders: [
         {
             orderTime: new Date(),
             id: "f9a40020-2e52-473b-92de-2d65d3c6d774",
@@ -35,26 +41,26 @@ export const initialState: Order[] =
             price: 39.84791285233185,
             direction: DirectionType.Buy
         },
-    ]
+    ],
+    status: 'idle',
+};
 
-export type RootState = ReturnType<typeof orderSlice>
-
-export default function orderSlice(state = initialState, action: {type: string, payload?: Order | string}) {
-
-    switch (action.type) {
-        case 'orders/orderCreated': {
-            return [
-                ...state,
-                action.payload as Order
-            ]
+export const orderSlice = createSlice({
+    name: 'orders',
+    initialState,
+    reducers: {
+        createOrder: (state, action: PayloadAction<Order>) => {
+            state.orders.push(action.payload);
+            state.status = 'idle';
+        },
+        deleteOrder: (state, action: PayloadAction<string>) => {
+            state.orders.filter(o => o.id !== action.payload);
         }
-        case 'orders/orderDeleted': {
-            return state;
-        }
-        case 'orders/orderUpdated': {
-            return state;
-        }
-        default:
-            return state;
     }
-}
+});
+
+export const { createOrder, deleteOrder } = orderSlice.actions;
+
+export const selectOrders = (state: RootState) => state.orders.orders;
+
+export default orderSlice.reducer;

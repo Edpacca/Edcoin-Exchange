@@ -1,17 +1,17 @@
 import React from 'react';
 import './App.css';
-import { OrderUI } from './features/orderer/Orderer';
-import { UserOrders } from './features/userAccount/UserOrders';
+import logo from './logo.svg';
+import { UserNavbar } from './features/navigation/UserNavbar';
 
 function App() {
   return (
-    <div className="split-sections">
-      <div className="App">
-          <OrderUI />
-      </div>
-      <div>
-        <UserOrders />
-      </div>
+    <div className="App">
+        <img src={logo} className="App-logo" alt="logo" />
+        <div className="split-sections">
+          <div className="private-area" >
+            <UserNavbar />
+          </div>
+        </div>
     </div>
   );
 }
