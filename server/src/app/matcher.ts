@@ -1,3 +1,4 @@
+import { DirectionType } from "../models/directionType";
 import { Order } from "./order";
 
 export class Matcher {
@@ -11,12 +12,13 @@ export class Matcher {
     }
 
     getPotentialMatches(newOrder: Order): Order[] {
-        let potentialMatches = this.filterOrders(newOrder.action);
+        const account = newOrder.account;
+        let potentialMatches = this.filterOrders(newOrder.direction).filter(o => o.account === newOrder.account);
 
-        if (newOrder.action === "BUY") {
+        if (newOrder.direction === DirectionType.Buy) {
             potentialMatches = potentialMatches.filter(o => o.price <= newOrder.price);
             potentialMatches.sort((a, b) => (b.price - a.price));
-        } else if (newOrder.action === "SELL") {
+        } else if (newOrder.direction === DirectionType.Sell) {
             potentialMatches = potentialMatches.filter(o => o.price >= newOrder.price);
             potentialMatches.sort((a, b) => (a.price - b.price));
         }
@@ -24,11 +26,11 @@ export class Matcher {
         return potentialMatches;
     }
 
-    filterOrders(action: string): Order[] {
-        const opposingAction = action === "BUY" 
-            ? "SELL" 
-            : "BUY";
+    filterOrders(direction: DirectionType): Order[] {
+        const opposingDirection = direction === DirectionType.Buy 
+            ? DirectionType.Sell 
+            : DirectionType.Buy;
 
-        return this.orders.filter(o => o.action == opposingAction);
+        return this.orders.filter(o => o.direction == opposingDirection);
     }
 }

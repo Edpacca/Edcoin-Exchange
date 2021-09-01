@@ -1,25 +1,27 @@
 import { Order } from "../app/order";
 import { Trade } from "../app/trade";
 import { makeTrades } from "../app/trader";
+import { AccountType } from "../models/accountType";
+import { DirectionType } from "../models/directionType";
 
 describe("TradeManager", () => {
 
-    it("throws an error if trading two orders with the same action", () => {
-        const newOrder = new Order(0, 9, 15, "BUY");
+    it("throws an error if trading two orders with the same direction", () => {
+        const newOrder = new Order(AccountType.USD, 9, 15, DirectionType.Buy);
         const matchedOrders = [
-            new Order(1, 10, 10, "SELL"),
-            new Order(2, 8, 10, "BUY"),
-            new Order(3, 6, 10, "SELL"),
+            new Order(AccountType.USD, 10, 10, DirectionType.Sell),
+            new Order(AccountType.USD, 8, 10, DirectionType.Buy),
+            new Order(AccountType.USD, 6, 10, DirectionType.Sell),
         ];
 
         expect(() => {makeTrades(newOrder, matchedOrders)})
-        .toThrow("cannot perform trade between orders with same action");
+        .toThrow("cannot perform trade between orders with same direction");
     });
 
     it("returns expected Trade", () => {
-        const newOrder = new Order(0, 9, 15, "BUY");
+        const newOrder = new Order(AccountType.USD, 9, 15, DirectionType.Buy);
         const matchedOrders = [
-            new Order(2, 8, 10, "SELL"),
+            new Order(AccountType.USD, 8, 10, DirectionType.Sell),
         ];
 
         const trades = makeTrades(newOrder, matchedOrders);
@@ -34,27 +36,27 @@ describe("TradeManager", () => {
     });
 
     it("makes multiple trades if newOrder is not fulfilled by first trade", () => {
-        const newOrder = new Order(0, 9, 15, "BUY");
+        const newOrder = new Order(AccountType.USD, 9, 15, DirectionType.Buy);
         const matchedOrders = [
-            new Order(1, 10, 10, "SELL"),
-            new Order(2, 8, 10, "SELL"),
-            new Order(3, 6, 10, "SELL")
+            new Order(AccountType.USD, 10, 10, DirectionType.Sell),
+            new Order(AccountType.USD, 8, 10, DirectionType.Sell),
+            new Order(AccountType.USD, 6, 10, DirectionType.Sell)
         ];
 
         expect(makeTrades(newOrder, matchedOrders).length).toBe(2);
     });
 
     it("reduces the new order by the correct amount", () => {
-        const newOrder = new Order(0, 10, 15, "BUY");
-        const matchedOrders = [ new Order(1, 5, 10, "SELL") ];
+        const newOrder = new Order(AccountType.USD, 10, 15, DirectionType.Buy);
+        const matchedOrders = [ new Order(AccountType.USD, 5, 10, DirectionType.Sell) ];
         makeTrades(newOrder, matchedOrders);
 
         expect(newOrder.quantity).toBe(5);
     });
 
     it("reduces the matched order by the correct amount", () => {
-        const newOrder = new Order(0, 10, 10, "BUY");
-        const matchedOrders = [ new Order(1, 5, 15, "SELL") ];
+        const newOrder = new Order(AccountType.USD, 10, 10, DirectionType.Buy);
+        const matchedOrders = [ new Order(AccountType.USD, 5, 15, DirectionType.Sell) ];
         makeTrades(newOrder, matchedOrders);
 
         expect(matchedOrders[0].quantity).toBe(5);

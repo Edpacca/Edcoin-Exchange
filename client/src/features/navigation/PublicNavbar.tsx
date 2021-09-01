@@ -1,27 +1,25 @@
-import React from "react";
+import { useState, ChangeEvent} from "react";
 import { Tab, Tabs, Paper } from '@material-ui/core';
-import { AccountBalanceWallet, ListAlt, MonetizationOn } from "@material-ui/icons";
-import { OrderMaker } from '../orders/orderMaker/OrderMaker';
+import { AccountBalanceWallet, ListAlt } from "@material-ui/icons";
 import { ThemeProvider } from '@material-ui/core/styles';
 import { AppTheme } from '../../themes/theme';
 import { OrderBrowser } from "../orders/orderBooks/OrderBrowser";
-import { TradeBrowser } from "../trades/TradeBrowser";
 import { selectOrdersById } from "../orders/orderSlice";
+import { TradeBrowser } from "../trades/TradeBrowser";
 
 const pages = [
-    <OrderMaker/>,
     <OrderBrowser
     orderSelector={selectOrdersById}/>,
-    <TradeBrowser/>,
+    <TradeBrowser/>
 ]
 
 let activeTab = pages[0]
 
-export function UserNavbar() {
+export function PublicNavbar() {
 
-    const [value, setValue] = React.useState(0);
+    const [value, setValue] = useState(0);
 
-    const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
+    const handleChange = (event: ChangeEvent<{}>, newValue: number) => {
         setValue(newValue);
         activeTab = pages[newValue];
     };
@@ -37,9 +35,8 @@ export function UserNavbar() {
             textColor="primary"
             aria-label="icon label tabs example"
             >
-                <Tab icon={<MonetizationOn />} label="NEW ORDER" />
-                <Tab icon={<ListAlt />} label="ACTIVE ORDERS" />
-                <Tab icon={<AccountBalanceWallet />} label="MY TRADES" />
+                <Tab icon={<ListAlt />} label="PUBLIC ORDERS" />
+                <Tab icon={<AccountBalanceWallet />} label="TRADE HISTORY" />
             </Tabs>
             <div>
                 {activeTab}

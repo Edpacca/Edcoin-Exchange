@@ -3,9 +3,9 @@
 }
 
 .App-logo {
-  height: 20vmin;
+  height: 5vmin;
   pointer-events: none;
-  margin: 1em;
+  margin: 0.5em;
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -46,8 +46,7 @@
 
 .App-function {
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  flex-direction: row;
   justify-content: center;
 
 }
@@ -59,13 +58,28 @@
 .split-sections {
   display: grid;
   grid-template-columns: 50% 50%;
+  margin-left: 2em;
+  margin-right: 2em;
+}
 
+.private-area {
+  padding: 1em;
+}
+
+.public-area {
+  padding: 1em;
 }
 
 .table-label {
   font-weight: bold;
   padding-right: 1em;
   color:rgb(255, 166, 0)
+}
+
+.table-data {
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  text-align: left;
 }
 
 .table-list {
@@ -81,7 +95,15 @@
 
 .table-order {
   border-collapse: collapse;
-  text-align: left;
+  margin: auto;
+}
+
+.buy-order {
+  color: rgb(0, 255, 55)
+}
+
+.sell-order {
+  color: rgb(255, 0, 0)
 }
 
 .button-selected {
@@ -106,7 +128,6 @@
   width: 100px;
   height: 45px;
   border-radius: 14px;
-  border: none;
 }
 
 .slider {
@@ -126,4 +147,19 @@
 
 .l-align {
   text-align: left;
+}
+
+.dropdown {
+  width: 4em;
+  height: 2em;
+  font-weight: bold;
+  font-size: large;
+  color: rgb(219, 219, 219);
+  background-color: rgb(49, 49, 49);
+  border-radius: 8px;
+  text-align-last: center;
+
+}
+
+.dropdown-option {
 }

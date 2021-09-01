@@ -1,9 +1,7 @@
 import { AccountType } from "./accountType";
 import { DirectionType } from "./directionType";
 
-export interface Order {
-    readonly time: Date,
-    readonly id: string,
+export interface OrderRequest {
     readonly account: AccountType,
     readonly quantity: number,
     readonly price: number,

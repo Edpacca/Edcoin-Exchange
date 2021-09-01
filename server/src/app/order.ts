@@ -1,18 +1,19 @@
 import { v4 as uuid } from 'uuid';
-
+import { DirectionType } from '../models/directionType';
+import { AccountType } from '../models/accountType';
 export class Order {
 
-    orderTime = new Date();
+    time = new Date();
     id = uuid();
     quantity: number;
-    account: number;
+    account: AccountType;
     price: number;
-    action: string;
+    direction: DirectionType;
 
-    constructor(account: number, price: number, quantity: number, action: string) {
+    constructor(account: AccountType, price: number, quantity: number, direction: DirectionType) {
         this.account = account;
         this.quantity = quantity;
         this.price = price;
-        this.action = action;
+        this.direction = direction;
     }
 }

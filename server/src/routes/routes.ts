@@ -35,21 +35,26 @@ export function appRouter(app: express.Express): void {
 
     // create new order, match and perform trades
     app.post("/order", (request, result) => {
-        // only verifying order direction for test
-        if (request.body.action !== "BUY" && request.body.action !== "SELL") {
-            result.status(400).send("invalid action: cannot create order");
-        } else {
+        try {
             const order = new Order(
                 request.body.account,
                 request.body.price,
                 request.body.quantity,
-                request.body.action);
-            
+                request.body.direction)
+
             // instantiate serviceManager with db references and a new matcher
             // pass new order to serviceManager to handle matching and trading
             const serviceManager = new ServiceManager(ordersDb, tradesDb, new Matcher(ordersDb));
             serviceManager.handleNewOrder(order);
             result.status(201).send(order);
-        }
+            } catch (error) {
+                result.status(400).send(`invalid order request: ${request}`);
+            }
+    });
+
+    app.delete("/order/:id", (request, result) => {
+        const id = request.params.id;
+        _.remove(ordersDb, o => o.id === id);
+        result.status(200).send(`Deleted order from database with id: ${id}`);
     });
 }

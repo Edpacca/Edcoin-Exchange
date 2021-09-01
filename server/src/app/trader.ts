@@ -8,14 +8,14 @@ export function makeTrades(newOrder: Order, matchedOrders: Order[]) : Trade[] {
 
     for (let i = 0; i < matchedOrders.length; i++) {
 
-        if (matchedOrders[i].action == newOrder.action) {
-            throw new Error("cannot perform trade between orders with same action");
+        if (matchedOrders[i].direction === newOrder.direction) {
+            throw new Error("cannot perform trade between orders with same direction");
         }
 
         const trade = new Trade(matchedOrders[i], newOrder);
         trades.push(trade);
 
-        debug(`${trade.action} ${trade.quantity} at ${trade.price}`);
+        debug(`${trade.quantity} at ${trade.price}`);
         debug(`${trade.orderId1} -> ${trade.orderId2}\n`);
 
         if (newOrder.quantity === 0) return trades;

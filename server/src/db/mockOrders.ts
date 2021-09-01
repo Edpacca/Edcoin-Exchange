@@ -1,25 +1,23 @@
 import { Order } from "../app/order";
+import { AccountType } from "../models/accountType";
+import { DirectionType } from "../models/directionType";
 
-export function getMockOrder(action: string = "BUY" ): boolean | Order {
-    if (action !== "BUY" && action !== "SELL") {
-        return false;
-    }
-
+export function getMockOrder(direction: DirectionType = DirectionType.Buy ): boolean | Order {
     return new Order(
-        99, 
+        getRandomAccount(), 
         getRandomArbitrary(10, 80), 
-        getRandomInt(1, 50), action);
+        getRandomInt(1, 50), direction);
 }
 
-// generates an equal amount of orders with opposing actions
-export function getMockOrders(maxOrders: number = 5): Order[] {
+// generates an equal amount of orders with opposing directions
+export function getMockOrders(maxOrders: number = 15): Order[] {
     let orders: Order[] = [];
     for (let i = 0; i < maxOrders * 2; i++) {
-        let action = i < maxOrders ? "SELL" : "BUY";
+        let direction = i < maxOrders ? DirectionType.Sell : DirectionType.Buy;
         let newOrder = new Order(
-            i, 
+            getRandomAccount(), 
             getRandomArbitrary(10, 80), 
-            getRandomInt(1, 50), action);
+            getRandomInt(1, 50), direction);
 
         orders.push(newOrder);
     }
@@ -34,4 +32,18 @@ function getRandomInt(min: number, max: number): number {
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min) + min);
+}
+
+const accounts = [
+    AccountType.CAD,
+    AccountType.CHF,
+    AccountType.EUR,
+    AccountType.GBP,
+    AccountType.JPY,
+    AccountType.USD
+]
+
+function getRandomAccount():AccountType {
+    const index = getRandomInt(0, accounts.length);
+    return accounts[index];
 }
