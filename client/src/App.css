@@ -8,6 +8,10 @@
   margin: 0.5em;
 }
 
+.login-logo {
+  height: 20vmin;
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 10s linear;
@@ -34,6 +38,7 @@
     transform: translateY(0px);
   }
 }
+
 
 .App-header {
   min-height: 100vh;
@@ -161,5 +166,6 @@
 
 }
 
-.dropdown-option {
+.selectUser {
+  width: 18em;
 }

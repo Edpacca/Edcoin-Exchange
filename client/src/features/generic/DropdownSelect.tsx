@@ -10,11 +10,11 @@ export const DropDownSelect = (props: DropDownSelectProps): JSX.Element => {
     return (
         <select 
             id={props.id}
-            className="dropdown"
+            className={`dropdown ${props.id}`}
             onChange={props.onChange}
         >
             {props.values.map(value => 
-            <option value={value} key={value} className="dropdown-option">
+            <option value={value} key={value}>
                 {value}
             </option>)}
         </select>

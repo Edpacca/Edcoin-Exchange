@@ -6,7 +6,7 @@ import { GetAllAccountTypes, AccountType } from '../../models/accountType';
 import { selectTrades } from "./tradeSlice";
 import { TradesBook } from "./TradesBook";
 import { Trade } from "../../models/trade";
-import { rangeFilter } from "../../utilities/utilities";
+import { rangeFilter } from "../../utilities/filterHelpers";
 
 export function TradeBrowser() {
 
@@ -57,7 +57,7 @@ export function TradeBrowser() {
             <DropDownSelect 
                 values={selectAccount}
                 id={"selectAccount"}
-                onChange={e => handleDropDownChange(e)}/>
+                onChange={handleDropDownChange}/>
             <div className="slider">
                 <h4>PRICE</h4>
                 <Slider 

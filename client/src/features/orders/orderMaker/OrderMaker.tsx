@@ -2,20 +2,17 @@ import { DirectionToggle } from '../../generic/DirectionToggle';
 import { DirectionType } from '../../../models/directionType';
 import React, { useState } from 'react';
 import { Slider } from '@material-ui/core';
-import { createOrder } from '../orderSlice';
-import { useAppDispatch } from '../../../app/hooks';
 import { OrderRequest } from '../../../models/orderRequest';
 import { GetAllAccountTypes, AccountType } from '../../../models/accountType';
 import { DropDownSelect } from '../../generic/DropdownSelect';
 
-export function OrderMaker() {
+export function OrderMaker(props: {createOrder: (order: OrderRequest) => void}) {
 
     const [isBuying, setIsBuying] = useState<boolean>(true);
     const [price, setPrice] = useState<number>(50);
     const [quantity, setQuantity] = useState<number>(1);
     const [accountType, setAccountType] = useState<AccountType>(AccountType.USD);
 
-    const dispatch = useAppDispatch();
     const setDirection = () => setIsBuying(!isBuying);
 
     const handleSliderChange = (event: React.ChangeEvent<{}>, value: number | number[], setValue:(value: number) => void) => {
@@ -31,6 +28,7 @@ export function OrderMaker() {
 
     const submit = () => {
         const order: OrderRequest = {
+            userId: "testId",
             account: accountType,
             quantity: quantity,
             price: price,
@@ -38,7 +36,7 @@ export function OrderMaker() {
                 ? DirectionType.Buy 
                 : DirectionType.Sell,
         }
-        dispatch(createOrder(order));
+        props.createOrder(order);
     }
 
     const currency: string = accountType.slice(0, 3);
@@ -49,9 +47,9 @@ export function OrderMaker() {
         <div>
             <br/>
             <DropDownSelect 
-                values={GetAllAccountTypes()}
+                values={GetAllAccountTypes().filter(type => type !== "All")}
                 id={"selectAccount"}
-                onChange={e => handleDropDownChange(e)}/>
+                onChange={handleDropDownChange}/>
             <br/>
             <div className="slider">
                 <div><h4>PRICE</h4></div>
@@ -59,6 +57,7 @@ export function OrderMaker() {
                     step={0.01}
                     min={0.00}
                     max={100}
+                    valueLabelDisplay="auto"
                     value={price}
                     onChange={(event, value) => handleSliderChange(event, value, setPrice)}
                 />

@@ -5,10 +5,13 @@ import { Trade } from '../app/trade';
 import { Matcher } from '../app/matcher';
 import { getOrders } from '../db/dbManager';
 import * as express from 'express';
+import { UserAccount } from '../models/userAccount';
+import { userAccounts } from '../db/mockUsers';
 
 // Temporary location for Db rerences
 const tradesDb: Trade[] = [];
 const ordersDb: Order[] = getOrders();
+const usersDb: UserAccount[] = userAccounts;
 
 export function appRouter(app: express.Express): void {
 
@@ -20,6 +23,11 @@ export function appRouter(app: express.Express): void {
     // GET all trades
     app.get("/trades", (request, result) => {
         result.status(200).send(tradesDb);
+    });
+
+    // GET all users
+    app.get("/users", (request, result) => {
+        result.status(200).send(usersDb);
     });
 
     // GET order by uuid
@@ -37,6 +45,7 @@ export function appRouter(app: express.Express): void {
     app.post("/order", (request, result) => {
         try {
             const order = new Order(
+                request.body.userId,
                 request.body.account,
                 request.body.price,
                 request.body.quantity,

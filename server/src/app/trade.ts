@@ -1,6 +1,4 @@
-import { AccessorDeclaration } from 'typescript';
 import { AccountType } from '../models/accountType';
-import { DirectionType } from '../models/directionType';
 import { Order } from './order';
 
 export class Trade {
@@ -10,6 +8,8 @@ export class Trade {
     quantity: number;
     orderId1: string;
     orderId2: string;
+    userId1: string;
+    userId2: string;
     account: AccountType;
 
     constructor(existingOrder: Order, newOrder: Order) {
@@ -18,6 +18,8 @@ export class Trade {
             existingOrder.quantity, newOrder.quantity);
         this.orderId1 = existingOrder.id;
         this.orderId2 = newOrder.id;
+        this.userId1 = existingOrder.userId;
+        this.userId2 = newOrder.userId;
         this.account = existingOrder.account;
 
         this.#makeTrade(existingOrder, newOrder);

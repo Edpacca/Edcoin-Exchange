@@ -2,67 +2,57 @@ import { Button, Slider } from "@material-ui/core";
 import { OrdersBook } from "./OrdersBook";
 import { useState, ChangeEvent } from "react";
 import { DirectionType } from "../../../models/directionType";
-import { useAppSelector } from '../../../app/hooks';
-import { RootState } from "../../../app/store";
 import { Order } from "../../../models/order";
 import { DropDownSelect } from "../../generic/DropdownSelect";
 import { GetAllAccountTypes, AccountType } from '../../../models/accountType';
-import { rangeFilter } from "../../../utilities/utilities";
+export interface FilterDispatchProps {
+    filterPrice: (range: number[]) => void;
+    filterQuantity: (range: number[]) => void;
+    changeAccountType: (account: AccountType) => void;
+    changeDirectionType:(direction: DirectionType) => void;
+}
 
-export function OrderBrowser(props: {orderSelector: (state:RootState)=>Order[]}) {
+export function OrderBrowser(props: {orders: Order[], dispatches: FilterDispatchProps}) {
 
-    const stateOrders: Order[] = useAppSelector(props.orderSelector);
-    const [orders, setOrders] = useState(stateOrders);
-    const [price, setPrice] = useState<number[]>([0, 100]);
-    const [quantity, setQuantity] = useState<number[]>([0, 100]);
-    const [directionTypeFilter, setDirectionTypeFilter] = useState<string>(DirectionType.None);
-    const [accountTypeFilter, setAccountTypeFilter] = useState<string>("All");
-    const selectAccount: string[] = [ "All" ].concat(GetAllAccountTypes());
-
+    const [priceRange, setPriceRange] = useState<number[]>([0, 100]);
+    const [quantityRange, setQuantityRange] = useState<number[]>([0, 100]);
+    const [directionTypeFilter, setDirectionTypeFilter] = useState<DirectionType>(DirectionType.All);
+    const [accountTypeFilter, setAccountTypeFilter] = useState<AccountType>(AccountType.All);
+    const selectAccount: string[] = GetAllAccountTypes();
+    
     const filterPrice = (range: number[]) => {
-        setPrice(range);
-        setOrders(stateOrders.filter(
-            order => rangeFilter(
-                order.price,
-                range[0],
-                range[1])));
+        setPriceRange(range);
+        props.dispatches.filterPrice(range);
     }
 
     const filterQuantity = (range: number[]) => {
-        setQuantity(range);
-        setOrders(stateOrders.filter(
-            order => rangeFilter(
-                order.quantity,
-                range[0],
-                range[1])));
+        setQuantityRange(range);
+        props.dispatches.filterQuantity(range);
     }
 
     const handleSliderChange = (event: ChangeEvent<{}>, newValue: number | number[], filterFunc: (range: number[]) => void) => {
+        if (typeof newValue === "number") return;
         filterFunc(newValue as number[]);
     }
 
     const handleDropDownChange = (event: ChangeEvent<HTMLSelectElement>) => {
         if (event.target.value === "All") {
-            setOrders(stateOrders);
-            setAccountTypeFilter(event.target.value);
+            props.dispatches.changeAccountType(AccountType.All);
+            setAccountTypeFilter(AccountType.All);
         } else {
             const account: AccountType = event.target.value + "-EDC" as AccountType;
-            setOrders(stateOrders.filter(order => order.account === account));
+            props.dispatches.changeAccountType(account);
             setAccountTypeFilter(account);
         }
     }
 
     const handleDirectionTypeFilter = (direction: DirectionType) => {
         setDirectionTypeFilter(direction);
-        if (direction === DirectionType.None) {
-            setOrders(stateOrders);
-        } else {
-            setOrders(stateOrders.filter(order => order.direction === direction));
-        }
+        props.dispatches.changeDirectionType(direction);
     }
 
     let searchCriteria = 
-        `${accountTypeFilter === "All" ? "" : accountTypeFilter + ":"} ${directionTypeFilter ? directionTypeFilter : "all"} orders (${orders.length})`;
+        `${accountTypeFilter === AccountType.All ? "" : `${accountTypeFilter}:`} ${directionTypeFilter} orders (${props.orders.length})`;
 
         return (
         <div>
@@ -71,11 +61,11 @@ export function OrderBrowser(props: {orderSelector: (state:RootState)=>Order[]})
             <DropDownSelect 
                 values={selectAccount}
                 id={"selectAccount"}
-                onChange={e => handleDropDownChange(e)}/>
+                onChange={handleDropDownChange}/>
             <div className="slider">
                 <h4>PRICE</h4>
                 <Slider 
-                value={price}
+                value={priceRange}
                 step={0.1}
                 onChange={(event, value) => handleSliderChange(event, value, filterPrice)}
                 valueLabelDisplay="auto"
@@ -83,7 +73,7 @@ export function OrderBrowser(props: {orderSelector: (state:RootState)=>Order[]})
                 />
                 <h4>QUANTITY</h4>
                 <Slider
-                value={quantity}
+                value={quantityRange}
                 step={1}
                 onChange={(event, value) => handleSliderChange(event, value, filterQuantity)}
                 valueLabelDisplay="auto"
@@ -91,13 +81,13 @@ export function OrderBrowser(props: {orderSelector: (state:RootState)=>Order[]})
                 />
             </div>
             <div>
-                <Button onClick={() => handleDirectionTypeFilter(DirectionType.None) }>All</Button>
+                <Button onClick={() => handleDirectionTypeFilter(DirectionType.All) }>All</Button>
                 <Button onClick={() => handleDirectionTypeFilter(DirectionType.Buy)}>Buy</Button>
                 <Button onClick={() => handleDirectionTypeFilter(DirectionType.Sell)}>Sell</Button>
             </div>
             <br/>
             <p>Searching {searchCriteria}</p>
-            <OrdersBook orders={orders}/>
+            <OrdersBook orders={props.orders}/>
             <br/>
         </div>
     )

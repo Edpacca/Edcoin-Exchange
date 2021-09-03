@@ -5,11 +5,13 @@ export function OrdersBook(props: {orders: Order[]}) {
     return (
         <table className="table-order">
             <thead>
-                <td className="table-label">Order Time</td>
-                <td className="table-label">Account</td>
-                <td className="table-label">Direction</td>
-                <td className="table-label">Price</td>
-                <td className="table-label">Quantity</td>
+                <tr>
+                    <th className="table-label">Order Time</th>
+                    <th className="table-label">Account</th>
+                    <th className="table-label">Direction</th>
+                    <th className="table-label">Price</th>
+                    <th className="table-label">Quantity</th>
+                </tr>
             </thead>
             <tbody>
                 {props.orders.map((order) => RenderOrderDetails(order))}

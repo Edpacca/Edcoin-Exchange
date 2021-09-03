@@ -1,36 +1,43 @@
 import React from "react";
-import { Tab, Tabs, Paper } from '@material-ui/core';
+import { Tab, Tabs, Paper, Button } from '@material-ui/core';
 import { AccountBalanceWallet, ListAlt, MonetizationOn } from "@material-ui/icons";
 import { OrderMaker } from '../orders/orderMaker/OrderMaker';
 import { ThemeProvider } from '@material-ui/core/styles';
 import { AppTheme } from '../../themes/theme';
-import { OrderBrowser } from "../orders/orderBooks/OrderBrowser";
+import { OrderBrowser, FilterDispatchProps } from "../orders/orderBooks/OrderBrowser";
 import { TradeBrowser } from "../trades/TradeBrowser";
-import { selectOrdersById } from "../orders/orderSlice";
+import { Order } from "../../models/order";
+import { store } from "../../app/store";
+import { UserLogin } from "../users/UserLogin";
+import { UserAccount } from "../../models/userAccount";
+import { OrderRequest } from "../../models/orderRequest";
 
-const pages = [
-    <OrderMaker/>,
-    <OrderBrowser
-    orderSelector={selectOrdersById}/>,
-    <TradeBrowser/>,
-]
+export interface UserDispatchProps {
+    logOut: (user: undefined) => void;
+    changeUser: (user: UserAccount) => void;
+}
 
-let activeTab = pages[0]
+export function UserNavbar(props: 
+    {
+        orders: Order[],
+        users: UserAccount[],
+        userDispatches: UserDispatchProps,
+        filterDispatches: FilterDispatchProps
+        createOrder: (order: OrderRequest) => Promise<any>;
+    }) {
 
-export function UserNavbar() {
+    const [activeTab, setActiveTab] = React.useState(0);
+    const hasActiveUser = store.getState().users.activeUser ? true : false;
 
-    const [value, setValue] = React.useState(0);
-
-    const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
-        setValue(newValue);
-        activeTab = pages[newValue];
+    const handleChange = (event: React.ChangeEvent<{}>, value: number) => {
+        setActiveTab(value);
     };
 
     return (
         <ThemeProvider theme={AppTheme}>
         <Paper>
             <Tabs
-            value={value}
+            value={activeTab}
             onChange={handleChange}
             variant="fullWidth"
             indicatorColor="primary"
@@ -42,9 +49,29 @@ export function UserNavbar() {
                 <Tab icon={<AccountBalanceWallet />} label="MY TRADES" />
             </Tabs>
             <div>
-                {activeTab}
+                {
+                    !hasActiveUser &&
+                    (<UserLogin 
+                        users={props.users}
+                        changeUserDispatch={props.userDispatches.changeUser}/>)
+                }
+                {
+                    activeTab === 0 && hasActiveUser &&
+                    (<OrderMaker createOrder={props.createOrder}/>)
+                }
+                { 
+                    activeTab === 1 && hasActiveUser &&
+                    (<OrderBrowser 
+                        orders={props.orders}
+                        dispatches={props.filterDispatches}/>)
+                }
+                {
+                    activeTab === 2 && hasActiveUser &&
+                    (<TradeBrowser/>)
+                }
             </div>
         </Paper>
+        {hasActiveUser ? <Button onClick={() => props.userDispatches.logOut(undefined)}>LOG OUT</Button> : undefined}
         </ThemeProvider>
     )
 }

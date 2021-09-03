@@ -1,9 +1,12 @@
 import { Order } from "../app/order";
 import { AccountType } from "../models/accountType";
 import { DirectionType } from "../models/directionType";
+import { UserAccount } from "../models/userAccount";
+import { userAccounts } from "./mockUsers";
 
 export function getMockOrder(direction: DirectionType = DirectionType.Buy ): boolean | Order {
     return new Order(
+        getRandomUserId(),
         getRandomAccount(), 
         getRandomArbitrary(10, 80), 
         getRandomInt(1, 50), direction);
@@ -15,6 +18,7 @@ export function getMockOrders(maxOrders: number = 15): Order[] {
     for (let i = 0; i < maxOrders * 2; i++) {
         let direction = i < maxOrders ? DirectionType.Sell : DirectionType.Buy;
         let newOrder = new Order(
+            getRandomUserId(),
             getRandomAccount(), 
             getRandomArbitrary(10, 80), 
             getRandomInt(1, 50), direction);
@@ -46,4 +50,9 @@ const accounts = [
 function getRandomAccount():AccountType {
     const index = getRandomInt(0, accounts.length);
     return accounts[index];
+}
+
+function getRandomUserId():string {
+    const index = getRandomInt(0, userAccounts.length);
+    return userAccounts[index].id;
 }

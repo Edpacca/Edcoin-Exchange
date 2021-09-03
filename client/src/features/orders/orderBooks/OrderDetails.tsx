@@ -5,7 +5,7 @@ import dateFormat from "dateformat"
 export function RenderOrderDetails(order: Order) {
     const style = order.direction === DirectionType.Buy ? "buy-order" : "sell-order";
     return (
-        <tr>
+        <tr key={order.id}>
             <td className="table-data">{dateFormat(order.time, "dd-mm-yy hh:mm:ss:ms")}</td>
             <td className="table-data">{order.account}</td>
             <td className={"table-data " + style}>{order.direction}</td>

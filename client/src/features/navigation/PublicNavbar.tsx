@@ -3,32 +3,25 @@ import { Tab, Tabs, Paper } from '@material-ui/core';
 import { AccountBalanceWallet, ListAlt } from "@material-ui/icons";
 import { ThemeProvider } from '@material-ui/core/styles';
 import { AppTheme } from '../../themes/theme';
-import { OrderBrowser } from "../orders/orderBooks/OrderBrowser";
-import { selectOrdersById } from "../orders/orderSlice";
+import { FilterDispatchProps, OrderBrowser } from "../orders/orderBooks/OrderBrowser";
 import { TradeBrowser } from "../trades/TradeBrowser";
+import { Order } from "../../models/order";
 
-const pages = [
-    <OrderBrowser
-    orderSelector={selectOrdersById}/>,
-    <TradeBrowser/>
-]
+export function PublicNavbar(props: {orders: Order[], dispatches: FilterDispatchProps}) {
 
-let activeTab = pages[0]
+    const [activeTab, setActiveTab] = useState(0);
 
-export function PublicNavbar() {
-
-    const [value, setValue] = useState(0);
-
-    const handleChange = (event: ChangeEvent<{}>, newValue: number) => {
-        setValue(newValue);
-        activeTab = pages[newValue];
+    const handleChange = (
+        event: ChangeEvent<{}>, 
+        value: number) => {
+        setActiveTab(value);
     };
 
     return (
         <ThemeProvider theme={AppTheme}>
         <Paper>
             <Tabs
-            value={value}
+            value={activeTab}
             onChange={handleChange}
             variant="fullWidth"
             indicatorColor="primary"
@@ -39,7 +32,16 @@ export function PublicNavbar() {
                 <Tab icon={<AccountBalanceWallet />} label="TRADE HISTORY" />
             </Tabs>
             <div>
-                {activeTab}
+                {
+                    activeTab === 0 &&
+                    (<OrderBrowser 
+                        orders={props.orders}
+                        dispatches={props.dispatches}/>)
+                }
+                {
+                    activeTab === 1 &&
+                    (<TradeBrowser/>)
+                }
             </div>
         </Paper>
         </ThemeProvider>
