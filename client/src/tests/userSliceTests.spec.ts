@@ -1,7 +1,4 @@
-import { RootState } from "../app/store";
-import reducer, { newUserSelected, selectUsers, UserState } from "../features/users/userSlice";
-import { AccountType } from "../models/accountType";
-import { DirectionType } from "../models/directionType";
+import reducer, { newUserSelected, UserState } from "../features/users/userSlice";
 import { UserAccount } from '../models/userAccount';
 
 test('should return initial state', () => {
