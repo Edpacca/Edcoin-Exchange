@@ -1,6 +1,7 @@
-import { AccountType } from "./accountType";
+import { AccountType } from './accountType';
 export interface Trade {
     readonly time: Date,
+    readonly id: string,
     readonly price: number;
     readonly quantity: number;
     readonly orderId1: string;

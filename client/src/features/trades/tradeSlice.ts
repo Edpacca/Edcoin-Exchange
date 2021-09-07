@@ -1,7 +1,9 @@
-import { ActionReducerMapBuilder, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { RootState } from "../../app/store";
-import { Trade } from "../../models/trade";
-
+import { ActionReducerMapBuilder, createAsyncThunk, createSlice, createSelector } from '@reduxjs/toolkit';
+import { RootState } from '../../app/store';
+import { Trade } from '../../models/trade';
+import { FilterState, selectPublicFilters, selectPrivateFilters } from '../filters/filterSlice';
+import { rangeFilter } from '../../utilities/filterHelpers';
+import { AccountType } from '../../models/accountType';
 export interface TradesState {
     value: Trade[];
     status: 'idle' | 'loading' | 'failed';
@@ -38,5 +40,46 @@ export const tradeSlice = createSlice({
 })
 
 export const selectTrades = (state: RootState): Trade[] => state.trades.value;
+
+export const selectFilteredPublicTrades = createSelector(
+    selectTrades,
+    selectPublicFilters,
+    (trades, typeFilters) => filterTrades(trades, typeFilters)
+)
+
+const selectFilteredPrivateTrades = createSelector(
+    selectTrades,
+    selectPrivateFilters,
+    (trades, typeFilters) => filterTrades(trades, typeFilters)
+)
+
+export const selectFilteredTradesByUser = createSelector(
+    selectFilteredPrivateTrades,
+    state => state.users.activeUser,
+    (trades, activeUser) => {
+        if (!activeUser) return [];
+        return trades.filter(
+            trade => trade.userId1 === activeUser.id ||
+                trade.userId2 === activeUser.id);
+    }
+)
+
+function filterTrades(trades: Trade[], typeFilters: FilterState) {
+    const { accountFilter, priceFilter, quantityFilter } = typeFilters;
+
+    const tradesByType = (trades: Trade[]): Trade[] => {
+        return accountFilter === AccountType.All
+        ? trades
+        : trades.filter(trade => trade.account === accountFilter);
+    }
+
+    const tradesByRange = (trades: Trade[]): Trade[] => {
+        return trades.filter(trade =>
+            rangeFilter(trade.price, priceFilter[0], priceFilter[1]) &&
+            rangeFilter(trade.quantity, quantityFilter[0], quantityFilter[1]));
+    }
+
+    return tradesByRange(tradesByType(trades));
+}
 
 export default tradeSlice.reducer;

@@ -1,5 +1,5 @@
 export enum DirectionType {
-    Buy = "BUY",
-    Sell = "SELL",
-    All = "All",
+    Buy = 'BUY',
+    Sell = 'SELL',
+    All = 'ALL',
 }

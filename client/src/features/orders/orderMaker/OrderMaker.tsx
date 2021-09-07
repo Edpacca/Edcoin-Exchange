@@ -1,10 +1,10 @@
-import { DirectionToggle } from '../../generic/DirectionToggle';
 import { DirectionType } from '../../../models/directionType';
 import React, { useState } from 'react';
-import { Slider } from '@material-ui/core';
+import { Button, Slider } from '@material-ui/core';
 import { OrderRequest } from '../../../models/orderRequest';
 import { GetAllAccountTypes, AccountType } from '../../../models/accountType';
-import { DropDownSelect } from '../../generic/DropdownSelect';
+import { DropDownSelect } from '../../common/DropdownSelect';
+import { store } from '../../../app/store';
 
 export function OrderMaker(props: {createOrder: (order: OrderRequest) => void}) {
 
@@ -12,8 +12,6 @@ export function OrderMaker(props: {createOrder: (order: OrderRequest) => void}) 
     const [price, setPrice] = useState<number>(50);
     const [quantity, setQuantity] = useState<number>(1);
     const [accountType, setAccountType] = useState<AccountType>(AccountType.USD);
-
-    const setDirection = () => setIsBuying(!isBuying);
 
     const handleSliderChange = (event: React.ChangeEvent<{}>, value: number | number[], setValue:(value: number) => void) => {
         if(Array.isArray(value)) return;
@@ -27,8 +25,9 @@ export function OrderMaker(props: {createOrder: (order: OrderRequest) => void}) 
     }
 
     const submit = () => {
+        const userId = store.getState().users.activeUser?.id as string;
         const order: OrderRequest = {
-            userId: "testId",
+            userId: userId,
             account: accountType,
             quantity: quantity,
             price: price,
@@ -48,45 +47,62 @@ export function OrderMaker(props: {createOrder: (order: OrderRequest) => void}) 
             <br/>
             <DropDownSelect 
                 values={GetAllAccountTypes().filter(type => type !== "All")}
-                id={"selectAccount"}
+                id={'selectAccount'}
                 onChange={handleDropDownChange}/>
             <br/>
-            <div className="slider">
+            <div className='slider'>
                 <div><h4>PRICE</h4></div>
                 <Slider
                     step={0.01}
                     min={0.00}
                     max={100}
-                    valueLabelDisplay="auto"
+                    valueLabelDisplay='auto'
                     value={price}
                     onChange={(event, value) => handleSliderChange(event, value, setPrice)}
                 />
             </div>
-            <div className="slider">
+            <div className='slider'>
             <div><h4>QUANTITY</h4></div>
                 <Slider
                     step={1}
                     min={1}
                     max={100}
-                    valueLabelDisplay="auto"
+                    valueLabelDisplay='auto'
                     value={quantity}
                     onChange={(event, value) => handleSliderChange(event, value, setQuantity)}
                 />
             </div>
             <br/>
-            <div><DirectionToggle 
-                isBuying={isBuying}
-                onClick={setDirection}
-            /></div>
+            <div>
+                <Button 
+                    onClick={() => setIsBuying(true)}
+                    color={isBuying ? 'primary' : 'default'}
+                    variant={isBuying ? 'outlined' : 'text'}
+                    >BUY
+                </Button>
+                <Button 
+                    onClick={() => setIsBuying(false)}
+                    color={!isBuying ? 'primary' : 'default'}
+                    variant={!isBuying ? 'outlined' : 'text'}
+                    >SELL
+                </Button>
+            </div>
             <br/>
             <div>
                 <h3>{orderMessage}</h3>
                 <h3>Total: {(quantity * price).toFixed(2)} {currency}</h3>
             </div>
-            <div><button 
-            onClick={submit}
-            className="button-selected submit"
-            >SUBMIT</button></div>
+            <br/>
+            <div>
+                <Button 
+                    onClick={submit}
+                    className='button-selected submit'
+                    color='primary'
+                    variant='contained'
+                    >SUBMIT
+                </Button>
+            </div>
+            <br/>
             <br/>
         </div>
     )

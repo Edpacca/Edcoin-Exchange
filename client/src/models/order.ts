@@ -1,5 +1,5 @@
-import { AccountType } from "./accountType";
-import { DirectionType } from "./directionType";
+import { AccountType } from './accountType';
+import { DirectionType } from './directionType';
 export interface Order {
     readonly time: Date;
     readonly id: string;

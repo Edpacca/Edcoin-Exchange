@@ -13,7 +13,10 @@ export class Matcher {
 
     getPotentialMatches(newOrder: Order): Order[] {
         const account = newOrder.account;
-        let potentialMatches = this.filterOrders(newOrder.direction).filter(o => o.account === newOrder.account);
+        let potentialMatches = 
+            this.filterOrders(newOrder.direction)
+            .filter(o => o.account === newOrder.account)
+            .filter(o => o.userId !== newOrder.userId);
 
         if (newOrder.direction === DirectionType.Buy) {
             potentialMatches = potentialMatches.filter(o => o.price <= newOrder.price);

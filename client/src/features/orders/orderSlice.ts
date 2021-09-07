@@ -1,8 +1,8 @@
 import { ActionReducerMapBuilder, createAsyncThunk, createSelector, createSlice } from '@reduxjs/toolkit';
-import { RootState } from "../../app/store";
+import { RootState } from '../../app/store';
 import { OrderRequest } from '../../models/orderRequest';
-import { Order } from "../../models/order";
-import { selectFilters } from '../filters/filterSlice';
+import { Order } from '../../models/order';
+import { FilterState, selectPublicFilters, selectPrivateFilters } from '../filters/filterSlice';
 import { rangeFilter } from '../../utilities/filterHelpers';
 import { DirectionType } from '../../models/directionType';
 import { AccountType } from '../../models/accountType';
@@ -69,40 +69,20 @@ export const selectOrderIds = createSelector(
     orders => orders.map(order => order.id)
 );
 
-export const selectFilteredOrders = createSelector(
+export const selectFilteredPublicOrders = createSelector(
     selectOrders,
-    selectFilters,
-    (orders, typeFilters) => {
-        const { directionFilter, accountFilter, priceFilter, quantityFilter } = typeFilters;
-        
-        const ordersByType = (orders: Order[]): Order[] => {
-            // written with readability over efficiency
-            // TODO improve filter efficiency
-            const ordersByDirection: Order[] = 
-                directionFilter === DirectionType.All 
-                ? orders 
-                : orders.filter(order => order.direction === directionFilter);
+    selectPublicFilters,
+    (orders, typeFilters) => filterOrders(orders, typeFilters)
+)
 
-            const ordersByAccount: Order[] = 
-                accountFilter === AccountType.All 
-                ? orders 
-                : orders.filter(order => order.account === accountFilter);
-            
-            return ordersByDirection.filter(order => ordersByAccount.includes(order));
-        }
-
-        const ordersByRange = (orders: Order[]): Order[] => {
-            return orders.filter(order => 
-                rangeFilter(order.price, priceFilter[0], priceFilter[1]) &&
-                rangeFilter(order.quantity, quantityFilter[0], quantityFilter[1]));
-        }
-
-        return ordersByRange(ordersByType(orders));
-    }
+const selectFilteredPrivateOrders = createSelector(
+    selectOrders,
+    selectPrivateFilters,
+    (orders, typeFilters) => filterOrders(orders, typeFilters)
 )
 
 export const selectFilteredOrdersByUser = createSelector(
-    selectFilteredOrders,
+    selectFilteredPrivateOrders,
     state => state.users.activeUser,
     (orders, activeUser) => {
         if (!activeUser) return [];
@@ -112,3 +92,26 @@ export const selectFilteredOrdersByUser = createSelector(
 )
 
 export default orderSlice.reducer;
+
+function filterOrders(orders: Order[], typeFilters: FilterState) {
+    const { directionFilter, accountFilter, priceFilter, quantityFilter } = typeFilters;
+    
+    const ordersByType = (orders: Order[]): Order[] => {
+        const ordersByDirection: Order[] = 
+            directionFilter === DirectionType.All 
+                ? orders 
+                : orders.filter(order => order.direction === directionFilter);
+
+            return accountFilter === AccountType.All 
+               ? ordersByDirection 
+               : ordersByDirection.filter(order => order.account === accountFilter);
+    }
+
+    const ordersByRange = (orders: Order[]): Order[] => {
+        return orders.filter(order => 
+            rangeFilter(order.price, priceFilter[0], priceFilter[1]) &&
+            rangeFilter(order.quantity, quantityFilter[0], quantityFilter[1]));
+    }
+
+    return ordersByRange(ordersByType(orders));
+}

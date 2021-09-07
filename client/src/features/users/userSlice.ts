@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { RootState } from "../../app/store";
+import { RootState } from '../../app/store';
 import { UserAccount } from '../../models/userAccount';
 
 export interface UserState {
@@ -46,5 +46,6 @@ export const userSlice = createSlice({
 export const { newUserSelected } = userSlice.actions;
 
 export const selectUsers = (state: RootState): UserAccount[] => state.users.value;
+export const selectActiveUser = (state: RootState): UserAccount | undefined => state.users.activeUser;
 
 export default userSlice.reducer;

@@ -1,5 +1,5 @@
-import { AccountType } from "./accountType";
-import { DirectionType } from "./directionType";
+import { AccountType } from './accountType';
+import { DirectionType } from './directionType';
 export interface OrderRequest {
     readonly account: AccountType;
     readonly quantity: number;

@@ -1,9 +1,10 @@
 import { AccountType } from '../models/accountType';
 import { Order } from './order';
+import { v4 as uuid } from 'uuid';
 
 export class Trade {
-
     time = new Date();
+    id = uuid();
     price: number;
     quantity: number;
     orderId1: string;

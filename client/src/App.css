@@ -39,6 +39,9 @@
   }
 }
 
+.logout-button {
+  margin: 1em;
+}
 
 .App-header {
   min-height: 100vh;
@@ -61,10 +64,10 @@
 }
 
 .split-sections {
-  display: grid;
-  grid-template-columns: 50% 50%;
-  margin-left: 2em;
-  margin-right: 2em;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  flex-wrap: wrap;
 }
 
 .private-area {
@@ -100,7 +103,7 @@
 
 .table-order {
   border-collapse: collapse;
-  margin: auto;
+  margin: 1em;
 }
 
 .buy-order {
@@ -168,4 +171,28 @@
 
 .selectUser {
   width: 18em;
+}
+
+.order-details-button {
+  height: 1.1em;
+  width: 1.1em;
+  background-color: rgb(66, 66, 66);
+  border-radius: 3px;
+}
+
+.order-modal {
+  color: white;
+  background-color: rgba(0, 0, 0, 0.65);
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  padding: 4em;
+  border-radius: 15px;
+  border: solid 1px rgb(255, 166, 0);
+}
+
+.table-modal {
+  text-align: left;
 }

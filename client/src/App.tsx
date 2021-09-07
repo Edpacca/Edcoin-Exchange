@@ -1,26 +1,35 @@
 import './App.css';
 import logo from './logo.svg';
 import { store } from './app/store';
-import { UserDispatchProps, UserNavbar } from './features/navigation/UserNavbar';
+import { PrivateNavbar } from './features/navigation/PrivateNavbar';
 import { PublicNavbar } from './features/navigation/PublicNavbar';
-import { fetchOrders, selectFilteredOrders, selectFilteredOrdersByUser } from './features/orders/orderSlice';
-import { fetchTrades } from './features/trades/tradeSlice';
+import { fetchOrders, selectFilteredPublicOrders, selectFilteredOrdersByUser } from './features/orders/orderSlice';
+import { fetchTrades, selectFilteredPublicTrades, selectFilteredTradesByUser } from './features/trades/tradeSlice';
 import { fetchUsers, selectUsers } from './features/users/userSlice';
 import { useAppDispatch, useAppSelector } from './app/hooks';
-import { Order } from './models/order';
 import { UserAccount } from './models/userAccount';
 import { AccountType } from './models/accountType';
 import { DirectionType } from './models/directionType';
-import { FilterDispatchProps } from './features/orders/orderBooks/OrderBrowser';
 import { newUserSelected } from './features/users/userSlice';
-import {    
-  directionTypeChanged,
-  accountFilterChanged,
-  priceFilterChanged,
-  quantityFilterChanged 
-} from './features/filters/filterSlice';
 import { OrderRequest } from './models/orderRequest';
 import { createOrder } from './features/orders/orderSlice';
+import { FilterDispatchProps } from './models/filterDispatchProps';
+import {    
+  directionTypeChangedPublic,
+  accountFilterChangedPublic,
+  priceFilterChangedPublic,
+  quantityFilterChangedPublic,
+  directionTypeChangedPrivate,
+  accountFilterChangedPrivate,
+  priceFilterChangedPrivate,
+  quantityFilterChangedPrivate,
+  selectPrivateFilters,
+  selectPublicFilters,
+  FilterState,
+} from './features/filters/filterSlice';
+import { Order } from './models/order';
+import { Trade } from './models/trade';
+import { UserDispatchProps } from './models/userDispatchProps';
 
 store.dispatch(fetchOrders());
 store.dispatch(fetchTrades());
@@ -29,39 +38,55 @@ store.dispatch(fetchUsers());
 function App() {
 
   const userOrders: Order[] = useAppSelector(selectFilteredOrdersByUser);
-  const publicOrders: Order[] = useAppSelector(selectFilteredOrders);
+  const userTrades: Trade[] = useAppSelector(selectFilteredTradesByUser);
   const users: UserAccount[] = useAppSelector(selectUsers);
+  const userFilters: FilterState = useAppSelector(selectPrivateFilters);
+
+  const publicOrders: Order[] = useAppSelector(selectFilteredPublicOrders);
+  const publicTrades: Trade[] = useAppSelector(selectFilteredPublicTrades);
+  const publicFilters: FilterState = useAppSelector(selectPublicFilters);
 
   const dispatch = useAppDispatch();
-  const logOut = (user: undefined) => dispatch(newUserSelected(user));
+  const logOut = () => dispatch(newUserSelected(undefined));
   const changeUser = (user: UserAccount) => dispatch(newUserSelected(user));
-  const filterPrice = (range: number[]) => dispatch(quantityFilterChanged(range));
-  const filterQuantity = (range: number[]) => dispatch(priceFilterChanged(range));
-  const changeAccountType = (account: AccountType) => dispatch(accountFilterChanged(account));
-  const changeDirectionType = (direction: DirectionType) => dispatch(directionTypeChanged(direction));
-  const createNewOrder = (order: OrderRequest) => dispatch(createOrder(order))
+  const createNewOrder = (order: OrderRequest) => dispatch(createOrder(order));
 
-  const filterDispatches: FilterDispatchProps = { filterPrice, filterQuantity, changeAccountType, changeDirectionType }
+  const filterDispatchesPublic: FilterDispatchProps = { 
+    filterPrice: (range: number[]) => dispatch(priceFilterChangedPublic(range)),
+    filterQuantity: (range: number[]) => dispatch(quantityFilterChangedPublic(range)), 
+    changeAccountType: (account: AccountType) => dispatch(accountFilterChangedPublic(account)), 
+    changeDirectionType: (direction: DirectionType) => dispatch(directionTypeChangedPublic(direction)) 
+  }
+  const filterDispatchesUser: FilterDispatchProps = {
+     filterPrice: (range: number[]) => dispatch(priceFilterChangedPrivate(range)), 
+     filterQuantity: (range: number[]) => dispatch(quantityFilterChangedPrivate(range)), 
+     changeAccountType: (account: AccountType) => dispatch(accountFilterChangedPrivate(account)), 
+     changeDirectionType: (direction: DirectionType) => dispatch(directionTypeChangedPrivate(direction)) 
+  }
   const userDispatches: UserDispatchProps = { logOut, changeUser }
 
   return (
     <div>
-      <div className="App">
-          <img src={logo} className="App-logo" alt="logo" />
-          <div className="split-sections">
-            <div className="private-area" >
-              <UserNavbar 
+      <div className='App'>
+          <img src={logo} className='App-logo' alt='logo' />
+          <div className='split-sections'>
+            <div className='private-area' >
+            <PrivateNavbar 
                 orders={userOrders}
+                trades={userTrades}
                 users={users}
                 userDispatches={userDispatches}
-                filterDispatches={filterDispatches}
+                filterDispatches={filterDispatchesUser}
+                filters={userFilters}
                 createOrder={createNewOrder}
                 />
             </div>
-            <div className="public-area">
+            <div className='public-area'>
               <PublicNavbar
                 orders={publicOrders}
-                dispatches={filterDispatches}
+                trades={publicTrades}
+                dispatches={filterDispatchesPublic}
+                filters={publicFilters}
               />
             </div>
           </div>
