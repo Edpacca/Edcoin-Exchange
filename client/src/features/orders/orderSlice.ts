@@ -93,7 +93,7 @@ export const selectFilteredOrdersByUser = createSelector(
 
 export default orderSlice.reducer;
 
-function filterOrders(orders: Order[], typeFilters: FilterState) {
+export function filterOrders(orders: Order[], typeFilters: FilterState) {
     const { directionFilter, accountFilter, priceFilter, quantityFilter } = typeFilters;
     
     const ordersByType = (orders: Order[]): Order[] => {

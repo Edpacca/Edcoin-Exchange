@@ -64,7 +64,7 @@ export const selectFilteredTradesByUser = createSelector(
     }
 )
 
-function filterTrades(trades: Trade[], typeFilters: FilterState) {
+export function filterTrades(trades: Trade[], typeFilters: FilterState) {
     const { accountFilter, priceFilter, quantityFilter } = typeFilters;
 
     const tradesByType = (trades: Trade[]): Trade[] => {
