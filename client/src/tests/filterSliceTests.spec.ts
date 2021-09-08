@@ -11,165 +11,107 @@ import reducer, {
 import { AccountType } from '../models/accountType';
 import { DirectionType } from '../models/directionType';
 
-test('should return initial state', () => {
-    expect(reducer(undefined, {type: ""})).toEqual(
-        {
-            public: {
-                directionFilter: DirectionType.All,
-                accountFilter: AccountType.All,
-                priceFilter: [0, 100],
-                quantityFilter: [0, 100]
-            },
-            private: {
-                directionFilter: DirectionType.All,
-                accountFilter: AccountType.All,
-                priceFilter: [0, 100],
-                quantityFilter: [0, 100]
-            }
+describe('filterSlice reducer actions', () =>{
+
+    it('should return the initial state when passed an empty action', () => {
+        expect(reducer(undefined, {type: ""})).toEqual(
+            {
+                public: {
+                    directionFilter: DirectionType.All,
+                    accountFilter: AccountType.All,
+                    priceFilter: [0, 100],
+                    quantityFilter: [0, 100]
+                },
+                private: {
+                    directionFilter: DirectionType.All,
+                    accountFilter: AccountType.All,
+                    priceFilter: [0, 100],
+                    quantityFilter: [0, 100]
+                }
+            });
+    });
+
+    // Direction type
+    describe(`on ${directionTypeChangedPublic.type}`, () => {
+        it('should set the public direction type filter', () => {
+            const testFilter = DirectionType.Buy;
+            const { public: { directionFilter } } = reducer(
+                undefined,directionTypeChangedPublic(DirectionType.Buy));
+
+            expect(directionFilter).toEqual(testFilter);
         });
-});
-
-test('it should handle a change in the public direction filter', () => {
-    expect(reducer(undefined,directionTypeChangedPublic(DirectionType.Buy)))
-    .toEqual(        {
-        public: {
-            directionFilter: DirectionType.Buy,
-            accountFilter: AccountType.All,
-            priceFilter: [0, 100],
-            quantityFilter: [0, 100]
-        },
-        private: {
-            directionFilter: DirectionType.All,
-            accountFilter: AccountType.All,
-            priceFilter: [0, 100],
-            quantityFilter: [0, 100]
-        }
     });
-});
 
-test('it should handle a change in the prviate direction filter', () => {
-    expect(reducer(undefined,directionTypeChangedPrivate(DirectionType.Buy)))
-    .toEqual(        {
-        public: {
-            directionFilter: DirectionType.All,
-            accountFilter: AccountType.All,
-            priceFilter: [0, 100],
-            quantityFilter: [0, 100]
-        },
-        private: {
-            directionFilter: DirectionType.Buy,
-            accountFilter: AccountType.All,
-            priceFilter: [0, 100],
-            quantityFilter: [0, 100]
-        }
+    describe(`on ${directionTypeChangedPrivate.type}`, () => {
+        it('should set the private direction type filter', () => {
+            const testFilter = DirectionType.Buy;
+            const { private: { directionFilter } } = reducer(
+                undefined,directionTypeChangedPrivate(DirectionType.Buy));
+
+            expect(directionFilter).toEqual(testFilter);
+        });
     });
-});
 
-test('it should handle a change in the public account filter', () => {
-    expect(reducer(undefined,accountFilterChangedPublic(AccountType.CHF)))
-    .toEqual(        {
-        public: {
-            directionFilter: DirectionType.All,
-            accountFilter: AccountType.CHF,
-            priceFilter: [0, 100],
-            quantityFilter: [0, 100]
-        },
-        private: {
-            directionFilter: DirectionType.All,
-            accountFilter: AccountType.All,
-            priceFilter: [0, 100],
-            quantityFilter: [0, 100]
-        }
+    // Account type
+    describe(`on ${accountFilterChangedPublic.type}`, () => {
+        it('should set the public account type filter', () => {
+            const testFilter = AccountType.CHF;
+            const { public: { accountFilter } } = reducer(
+                undefined,accountFilterChangedPublic(AccountType.CHF));
+
+            expect(accountFilter).toEqual(testFilter);
+        });
     });
-});
 
-test('it should handle a change in the public account filter', () => {
-    expect(reducer(undefined,accountFilterChangedPrivate(AccountType.CHF)))
-    .toEqual(        {
-        public: {
-            directionFilter: DirectionType.All,
-            accountFilter: AccountType.All,
-            priceFilter: [0, 100],
-            quantityFilter: [0, 100]
-        },
-        private: {
-            directionFilter: DirectionType.All,
-            accountFilter: AccountType.CHF,
-            priceFilter: [0, 100],
-            quantityFilter: [0, 100]
-        }
+    describe(`on ${accountFilterChangedPrivate.type}`, () => {
+        it('should set the private account type filter', () => {
+            const testFilter = AccountType.CHF;
+            const { private: { accountFilter } } = reducer(
+                undefined,accountFilterChangedPrivate(AccountType.CHF));
+
+            expect(accountFilter).toEqual(testFilter);
+        });
     });
-});
 
+    // Price filter
+    describe(`on ${priceFilterChangedPublic.type}`, () => {
+        it('should set the public price range filter', () => {
+            const testFilter = [10, 90];
+            const { public: { priceFilter } } = reducer(
+                undefined,priceFilterChangedPublic([10, 90]));
 
-test('it should handle a change in the public price filter', () => {
-    expect(reducer(undefined,priceFilterChangedPublic([20, 80])))
-    .toEqual(        {
-        public: {
-            directionFilter: DirectionType.All,
-            accountFilter: AccountType.All,
-            priceFilter: [20, 80],
-            quantityFilter: [0, 100]
-        },
-        private: {
-            directionFilter: DirectionType.All,
-            accountFilter: AccountType.All,
-            priceFilter: [0, 100],
-            quantityFilter: [0, 100]
-        }
+            expect(priceFilter).toEqual(testFilter);
+        });
     });
-});
 
-test('it should handle a change in the private price filter', () => {
-    expect(reducer(undefined,priceFilterChangedPrivate([20, 80])))
-    .toEqual(        {
-        public: {
-            directionFilter: DirectionType.All,
-            accountFilter: AccountType.All,
-            priceFilter: [0, 100],
-            quantityFilter: [0, 100]
-        },
-        private: {
-            directionFilter: DirectionType.All,
-            accountFilter: AccountType.All,
-            priceFilter: [20, 80],
-            quantityFilter: [0, 100]
-        }
+    describe(`on ${priceFilterChangedPrivate.type}`, () => {
+        it('should set the public price range filter', () => {
+            const testFilter = [10, 90];
+            const { private: { priceFilter } } = reducer(
+                undefined,priceFilterChangedPrivate([10, 90]));
+
+            expect(priceFilter).toEqual(testFilter);
+        });
     });
-});
 
-test('it should handle a change in the public quantity filter', () => {
-    expect(reducer(undefined,quantityFilterChangedPublic([30, 55])))
-    .toEqual({
-        public: {
-            directionFilter: DirectionType.All,
-            accountFilter: AccountType.All,
-            priceFilter: [0, 100],
-            quantityFilter: [30, 55]
-        },
-        private: {
-            directionFilter: DirectionType.All,
-            accountFilter: AccountType.All,
-            priceFilter: [0, 100],
-            quantityFilter: [0, 100]
-        }
+    // Quantity filter
+    describe(`on ${quantityFilterChangedPublic.type}`, () => {
+        it('should set the public quantity range filter', () => {
+            const testFilter = [10, 90];
+            const { public: { quantityFilter } } = reducer(
+                undefined,quantityFilterChangedPublic([10, 90]));
+
+            expect(quantityFilter).toEqual(testFilter);
+        });
     });
-});
 
-test('it should handle a change in the private quantity filter', () => {
-    expect(reducer(undefined,quantityFilterChangedPrivate([30, 55])))
-    .toEqual({
-        public: {
-            directionFilter: DirectionType.All,
-            accountFilter: AccountType.All,
-            priceFilter: [0, 100],
-            quantityFilter: [0, 100]
-        },
-        private: {
-            directionFilter: DirectionType.All,
-            accountFilter: AccountType.All,
-            priceFilter: [0, 100],
-            quantityFilter: [30, 55]
-        }
+    describe(`on ${quantityFilterChangedPrivate.type}`, () => {
+        it('should set the public quantity range filter', () => {
+            const testFilter = [10, 90];
+            const { private: { quantityFilter } } = reducer(
+                undefined,quantityFilterChangedPrivate([10, 90]));
+
+            expect(quantityFilter).toEqual(testFilter);
+        });
     });
 });
