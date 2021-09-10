@@ -52,11 +52,17 @@ export const orderSlice = createSlice({
                 state.status = 'idle';
                 state.value = action.payload;
             })
+            .addCase(fetchOrders.rejected, (state) => {
+                state.status = 'failed';
+            })
             .addCase(createOrder.pending, (state) => {
                 state.status = 'loading'
             })
             .addCase(createOrder.fulfilled, (state) => {
                 state.status = 'idle'
+            })
+            .addCase(createOrder.rejected, (state) => {
+                state.status = 'failed'
             });
     },
 });

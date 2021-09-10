@@ -89,7 +89,7 @@ export function OrderMaker(props: {createOrder: (order: OrderRequest) => void}) 
             </div>
             <br/>
             <div>
-                <h3>{orderMessage}</h3>
+                <h3 data-testid ={'summary'}>{orderMessage}</h3>
                 <h3>Total: {(quantity * price).toFixed(2)} {currency}</h3>
             </div>
             <br/>
