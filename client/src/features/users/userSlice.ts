@@ -15,11 +15,10 @@ export const initialState: UserState = {
 };
 
 export const fetchUsers = createAsyncThunk(
-    'users/fetchUsers',
-    async () => {
-        const response = await fetch(`${process.env.REACT_APP_SERVER}/users`)
-        .then(response => response.json())
-        return response;
+    'users/fetchUsers', 
+    async () =>  { 
+        return await fetch(`${process.env.REACT_APP_SERVER}/users`)
+        .then(response => response.json()); 
     }
 );
 
@@ -35,6 +34,9 @@ export const userSlice = createSlice({
         builder
             .addCase(fetchUsers.pending, (state) => {
                 state.status = 'loading';
+            })
+            .addCase(fetchUsers.rejected, (state) => {
+                state.status = 'failed';
             })
             .addCase(fetchUsers.fulfilled, (state, action) => {
                 state.status = 'idle';
