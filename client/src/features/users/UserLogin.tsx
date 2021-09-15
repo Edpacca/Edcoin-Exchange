@@ -3,7 +3,9 @@ import logo from '../../logo.svg';
 import { UserAccount } from '../../models/userAccount';
 import { DropDownSelect } from '../common/DropdownSelect';
 
-export function UserLogin(props: {users: UserAccount[], changeUserDispatch: (user: UserAccount) => void}) {
+export function UserLogin(props: {users: UserAccount[],
+    changeUserDispatch: (user: UserAccount) => void,
+    loginStatus: 'idle' | 'loading' | 'failed'}) {
     
     // TODO map users by ID:Name KVP dictionary pass in as props
     const handleDropDownChange = (event: ChangeEvent<HTMLSelectElement>) => {
@@ -17,7 +19,7 @@ export function UserLogin(props: {users: UserAccount[], changeUserDispatch: (use
             <br/>
             <div>
                 <br/>
-                <img src={logo} className='App-logo login-logo' alt='logo' />
+                <img src={logo} className={`App-logo ${props.loginStatus}`} alt='logo' />
                 <div className='user-login'>
                 <br/>
                     <DropDownSelect

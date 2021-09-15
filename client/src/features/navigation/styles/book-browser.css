@@ -1,0 +1,47 @@
+.filter-grid {
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: 1fr 2fr;
+      grid-template-columns: 1fr 2fr;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.unit-text {
+  color: #ffa600;
+  font-weight: bold;
+}
+
+.search-text {
+  font-size: medium;
+}
+
+.book-browser {
+  display: -ms-grid;
+  display: grid;
+  padding-top: 2em;
+}
+
+.data {
+  margin: auto;
+  height: 40em;
+  overflow: auto;
+  overflow-x: hidden;
+}
+
+@media (max-width: 1400px) {
+  .data {
+    height: 20em;
+  }
+}
+
+.slider-filter {
+  margin: 2em 2em 0 2em;
+}
+
+.slider-filter .text {
+  color: #ffa600;
+  margin-bottom: -0.5em;
+  font-weight: bold;
+}

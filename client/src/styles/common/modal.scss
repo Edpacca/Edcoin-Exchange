@@ -1,0 +1,33 @@
+@import './colours.scss';
+
+.modal-button {
+    height: 1.1em;
+    width: 1.1em;
+    background-color: $appGrey3;
+    color: $appGrey0;
+    border-width: 0px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+    :hover {
+      color: $appOrange;
+    }
+  }
+  
+  .modal {
+    color: white;
+    background-color: $transBlack;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    padding: 4em;
+    border-radius: 15px;
+    border: solid 1px $appOrange;
+  }
+  
+  .table-modal {
+    text-align: left;
+  }

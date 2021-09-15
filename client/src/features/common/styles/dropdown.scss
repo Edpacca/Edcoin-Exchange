@@ -1,0 +1,16 @@
+@import '../../../styles/common/colours.scss';
+
+.dropdown {
+    width: 4em;
+    height: 2em;
+    font-weight: bold;
+    font-size: medium;
+    color: $appOffWhite;
+    background-color: $appGrey3;
+    border-radius: 8px;
+    text-align-last: center;
+  }
+  
+  .selectUser {
+    width: 18em;
+  }

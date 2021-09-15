@@ -1,0 +1,37 @@
+@import './colours.scss';
+
+.main-table {
+    border-collapse: separate;
+    margin: 1em;
+    border-spacing: 1em 0em; 
+    text-align: center;
+    font-size: 12px;
+}
+
+.table-label {
+    font-weight: bold;
+    color: $appOrange;
+  }
+  
+.table-data {
+  color: rgb(224, 224, 224);
+}
+
+.table-list {
+  padding: 1.5rem;
+  padding-top: 0.5rem;
+  list-style: none;
+}
+
+.table-list-item {
+  border: 0.5px solid $appGrey2;
+  padding: 0.5rem;
+}
+
+.buy-order {
+  color: $buy;
+}
+
+.sell-order {
+  color: $sell;
+}

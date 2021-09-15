@@ -1,4 +1,5 @@
 import { ChangeEventHandler } from 'react'
+import './styles/dropdown.css';
 
 export interface DropDownSelectProps {
     id: string;

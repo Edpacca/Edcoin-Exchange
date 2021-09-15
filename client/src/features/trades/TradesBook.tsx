@@ -6,10 +6,11 @@ export function TradesBook(props: {trades: Trade[], isPrivate: boolean}) {
     const detailsHeader = <td className='table-label'>Details</td>
 
     return (
-        <table className='table-order'>
+        <table className='main-table'>
             <thead>
                 <tr>
-                    <th className='table-label'>Trade Time</th>
+                    <th className='table-label'>Date</th>
+                    <th className='table-label'>Time</th>
                     <th className='table-label'>Account</th>
                     <th className='table-label'>Price</th>
                     <th className='table-label'>Quantity</th>

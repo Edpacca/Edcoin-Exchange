@@ -8,6 +8,7 @@ import { DirectionType } from '../../models/directionType';
 import { useAppSelector } from '../../app/hooks';
 import { selectActiveUser } from '../users/userSlice';
 import { selectOrders } from '../orders/orderSlice';
+import { Visibility } from '@material-ui/icons';
 
 export default function OrderDetailsModal(props: {trade: Trade}) {
     const [open, setOpen] = useState(false);
@@ -27,8 +28,8 @@ export default function OrderDetailsModal(props: {trade: Trade}) {
     const style = activeUserOrder?.direction === DirectionType.Buy ? 'buy-order' : 'sell-order';
 
     const body = (
-        <div className='order-modal'>
-            <img src={logo} className='App-logo' alt='logo' />
+        <div className='modal'>
+            <img src={logo} className='modal-logo' alt='logo' />
             <br/>
             <h4>
                 {activeUser.name} 
@@ -63,7 +64,7 @@ export default function OrderDetailsModal(props: {trade: Trade}) {
 
     return (
         <div>
-            <button onClick={handleOpen} className='order-details-button'/>
+            <button onClick={handleOpen} className='modal-button'><Visibility fontSize={"small"}/></button>
             <Modal open={open} onClose={handleClose}>
                 {body}
             </Modal>

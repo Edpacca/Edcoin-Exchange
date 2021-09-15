@@ -1,0 +1,39 @@
+@import '../../../../styles/common/colours.scss';
+
+.order-form {
+    padding: 2em;
+  }
+
+  .input-labels {
+    display: grid;
+    grid-template-columns: 25% 25% 25%;
+    text-align: right;
+    align-items: center;
+    grid-gap: 2em;
+    margin: 0em 4em;
+    font-size: medium;
+    
+    .input {
+      background-color: $appGrey2;
+      border-width: 0px;
+      color: $appOffWhite;
+      font-size: medium;
+      padding-left: 1em;
+      width: 4em;
+      height: 1.5em;
+      border-radius: 6px;
+    }
+
+    .units {
+      text-align: left;
+      color: $appOffWhite;
+    }
+  }
+
+  .order-filters {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2em;
+    column-gap: 4em;
+  }

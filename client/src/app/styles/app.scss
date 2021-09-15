@@ -1,0 +1,36 @@
+@import '../../styles/common/colours.scss';
+
+.app-container {
+  text-align: center;
+  font-size: 12px;
+  color: $appOffWhite;
+  padding: 2rem 6rem;
+
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: $appGrey0;
+    border-radius: 2px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: $appGrey3;
+  }
+}
+
+.panel-container {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  justify-content: center;
+  grid-gap: 2em;
+}
+
+.panel {
+  width: auto;
+  background-color: $appGrey3;
+  border-radius: 2px;
+}
+
+

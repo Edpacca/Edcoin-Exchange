@@ -1,4 +1,5 @@
-import { Button, Slider } from '@material-ui/core';
+import './styles/book-browser.css';
+import { Slider } from '@material-ui/core';
 import { OrdersBook } from '../orders/orderBooks/OrdersBook';
 import { useState, ChangeEvent } from 'react';
 import { DirectionType } from '../../models/directionType';
@@ -10,6 +11,7 @@ import { FilterDispatchProps } from '../../models/filterDispatchProps';
 import { Trade } from '../../models/trade';
 import { BookType } from '../../models/bookType';
 import { TradesBook } from '../trades/TradesBook';
+import { DirectionFilterButtons } from '../common/DirectionFilterButtons';
 
 export function BooksBrowser(props: 
     {
@@ -24,7 +26,7 @@ export function BooksBrowser(props:
     const [priceRange, setPriceRange] = useState<number[]>([0, 100]);
     const [quantityRange, setQuantityRange] = useState<number[]>([0, 100]);
     const selectAccount: string[] = GetAllAccountTypes();
-    // const bookType = props.values ? props.values[0] instanceof Order ? BookType.Orders : BookType.Trades;
+    const isOrderBook: boolean = props.bookType === BookType.Orders;
     
     const filterPrice = (range: number[]) => {
         setPriceRange(range);
@@ -60,65 +62,73 @@ export function BooksBrowser(props:
         :   `${props.filters.accountFilter} trades (${props.values.length})`;
 
         return (
-        <div>
-            <br/>
-            <h4>ACCOUNT</h4>
-            <DropDownSelect 
-                values={selectAccount}
-                id={'selectAccount'}
-                onChange={handleDropDownChange}/>
-            <div className='slider'>
-                <h4>PRICE {props.filters.priceFilter[0]} : {props.filters.priceFilter[1]}</h4>
-                <Slider 
-                value={priceRange}
-                step={0.1}
-                onChange={(event, value) => handleSliderChange(event, value, filterPrice)}
-                valueLabelDisplay='auto'
-                aria-labelledby='range-slider'
-                />
-                <h4>QUANTITY {props.filters.quantityFilter[0]} : {props.filters.quantityFilter[1]}</h4>
-                <Slider
-                value={quantityRange}
-                step={1}
-                onChange={(event, value) => handleSliderChange(event, value, filterQuantity)}
-                valueLabelDisplay='auto'
-                aria-labelledby='range-slider'
-                />
-            </div>
-            {
-                props.bookType === BookType.Orders &&
-                <div>
-                    <Button 
-                        onClick={() => handleDirectionTypeFilter(DirectionType.All)}
-                        color={props.filters.directionFilter === DirectionType.All ? 'primary' : 'default'}
-                        variant={props.filters.directionFilter === DirectionType.All ? 'outlined' : 'text'}
-                        >All
-                    </Button>
-                    <Button 
-                        onClick={() => handleDirectionTypeFilter(DirectionType.Buy)}
-                        color={props.filters.directionFilter === DirectionType.Buy ? 'primary' : 'default'}
-                        variant={props.filters.directionFilter === DirectionType.Buy ? 'outlined' : 'text'}
-                        >Buy
-                    </Button>
-                    <Button
-                        onClick={() => handleDirectionTypeFilter(DirectionType.Sell)}
-                        color={props.filters.directionFilter === DirectionType.Sell ? 'primary' : 'default'}
-                        variant={props.filters.directionFilter === DirectionType.Sell ? 'outlined' : 'text'}
-                        >Sell
-                    </Button>
+        <div className="book-browser">
+            <div>
+                <div className={isOrderBook ? "filter-grid" : ""}>
+                    <div>
+                        <p className="unit-text">ACCOUNT</p>
+                        <DropDownSelect 
+                            values={selectAccount}
+                            id={'selectAccount'}
+                            onChange={handleDropDownChange}
+                        />
+                    </div>
+                    {
+                        isOrderBook &&
+                        <div>
+                            <p className="unit-text">DIRECTION</p>
+                            <DirectionFilterButtons
+                                directionFilter = { props.filters.directionFilter }
+                                handleDirectionTypeFilter = {handleDirectionTypeFilter} />
+                        </div>
+                    }
                 </div>
-            }
-            <br/>
-            <p>Searching {searchCriteria}</p>
+                    <div className="slider-filter">
+                        <div className="text">PRICE</div>
+                        <Slider
+                                value={priceRange}
+                                step={0.1}
+                                onChange={(event, value) => handleSliderChange(event, value, filterPrice)}
+                                valueLabelDisplay='auto'
+                                aria-labelledby='range-slider'
+                            />
+                    </div>
+                    <div className="slider-filter">
+                        <div className="text">QUANTITY</div>
+                        <Slider
+                            value={quantityRange}
+                            step={1}
+                            onChange={(event, value) => handleSliderChange(event, value, filterQuantity)}
+                            valueLabelDisplay='auto'
+                            aria-labelledby='range-slider'
+                        />
+                    </div>
+
+                
+                <div className="search-text">
+                    <p>Searching {searchCriteria}</p>
+                    <p>
+                    {
+                        (priceRange[0] !== 0 || priceRange[1] !== 100) &&
+                        <span>Price: {props.filters.priceFilter[0]} : {props.filters.priceFilter[1]}</span>
+                    }
+                    {
+                        (quantityRange[0] !== 0 || quantityRange[1] !== 100) &&
+                        <span>&nbsp; Quantity: {props.filters.quantityFilter[0]} : {props.filters.quantityFilter[1]}</span>
+                    }
+                    </p>
+                </div>
+            </div>
+            <div className="data">
             {
-                props.bookType === BookType.Orders &&
+                isOrderBook &&
                 <OrdersBook orders={props.values as Order[]} isPrivate={props.isPrivate}/>
             }
             {
                 props.bookType === BookType.Trades &&
                 <TradesBook trades={props.values as Trade[]} isPrivate={props.isPrivate}/>
             }
-            <br/>
+            </div>
         </div>
     )
 }

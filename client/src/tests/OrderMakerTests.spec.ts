@@ -1,5 +1,5 @@
 import { render, fireEvent, screen } from '@testing-library/react';
-import { OrderMaker } from '../features/orders/orderMaker/OrderMaker';
+import { OrderMaker } from '../features/orders/OrderMaker';
 
 test('renders price and quantity', () => {
     const createOrder = jest.fn();

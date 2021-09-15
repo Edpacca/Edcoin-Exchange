@@ -1,15 +1,11 @@
 import React from 'react';
-import { Tab, Tabs, Paper } from '@material-ui/core';
+import { Tab, Tabs } from '@material-ui/core';
 import { AccountBalanceWallet, ListAlt, MonetizationOn } from '@material-ui/icons';
-import { OrderMaker } from '../orders/orderMaker/OrderMaker';
-import { ThemeProvider } from '@material-ui/core/styles';
-import { AppTheme } from '../../themes/theme';
+import { OrderMaker } from '../orders/OrderMaker/OrderMaker';
 import { Order } from '../../models/order';
-import { store } from '../../app/store';
 import { UserLogin } from '../users/UserLogin';
 import { UserAccount } from '../../models/userAccount';
 import { OrderRequest } from '../../models/orderRequest';
-import { LogOutButton } from './LogOutButton';
 import { FilterState } from '../filters/filterSlice';
 import { FilterDispatchProps } from '../../models/filterDispatchProps';
 import { UserDispatchProps } from '../../models/userDispatchProps';
@@ -22,21 +18,21 @@ export function PrivateNavbar(props: {
         trades: Trade[],
         users: UserAccount[],
         userDispatches: UserDispatchProps,
-        filterDispatches: FilterDispatchProps
-        filters: FilterState
-        createOrder: (order: OrderRequest) => Promise<any>;
+        filterDispatches: FilterDispatchProps,
+        filters: FilterState,
+        hasActiveUser: boolean,
+        loginStatus: 'idle' | 'loading' | 'failed',
+        createOrder: (order: OrderRequest) => Promise<any>,
     }) {
 
     const [activeTab, setActiveTab] = React.useState(0);
-    const hasActiveUser = store.getState().users.activeUser ? true : false;
 
     const handleChange = (event: React.ChangeEvent<{}>, value: number) => {
         setActiveTab(value);
     };
 
     return (
-        <ThemeProvider theme={AppTheme}>
-        <Paper>
+        <div className="panel">
             <Tabs
             value={activeTab}
             onChange={handleChange}
@@ -51,17 +47,18 @@ export function PrivateNavbar(props: {
             </Tabs>
             <div>
                 {
-                    !hasActiveUser &&
-                    (<UserLogin 
+                    !props.hasActiveUser &&
+                    (<UserLogin
                         users={props.users}
-                        changeUserDispatch={props.userDispatches.changeUser}/>)
+                        changeUserDispatch={props.userDispatches.changeUser}
+                        loginStatus={props.loginStatus}/>)
                 }
                 {
-                    activeTab === 0 && hasActiveUser &&
+                    activeTab === 0 && props.hasActiveUser &&
                     (<OrderMaker createOrder={props.createOrder}/>)
                 }
                 { 
-                    activeTab === 1 && hasActiveUser &&
+                    activeTab === 1 && props.hasActiveUser &&
                     (<BooksBrowser 
                         values={props.orders}
                         bookType={BookType.Orders}
@@ -70,7 +67,7 @@ export function PrivateNavbar(props: {
                         isPrivate={true}/>)
                 }
                 {
-                    activeTab === 2 && hasActiveUser &&
+                    activeTab === 2 && props.hasActiveUser &&
                     (<BooksBrowser 
                         values={props.trades}
                         bookType={BookType.Trades}
@@ -79,10 +76,6 @@ export function PrivateNavbar(props: {
                         isPrivate={true}/>)
                 }
             </div>
-        </Paper>
-        <LogOutButton
-            hasActiveUser={hasActiveUser}
-            logOut={props.userDispatches.logOut}/>
-        </ThemeProvider>
+        </div>
     )
 }

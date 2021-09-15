@@ -22,6 +22,16 @@ export const fetchUsers = createAsyncThunk(
     }
 );
 
+export const loginUser = createAsyncThunk(
+    'users/loginUser',
+    async (user: UserAccount): Promise<UserAccount> => {
+        function delay(ms: number) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+        return await delay(1000).then(() => user);
+    }
+)
+
 export const userSlice = createSlice({
     name: 'users',
     initialState,
@@ -40,14 +50,22 @@ export const userSlice = createSlice({
             })
             .addCase(fetchUsers.fulfilled, (state, action) => {
                 state.status = 'idle';
-                state.value = action.payload
-            });
+                state.value = action.payload;
+            })
+            .addCase(loginUser.pending, (state) => {
+                state.status = 'loading';
+            })
+            .addCase(loginUser.fulfilled, (state, action) => {
+                state.status = 'idle';
+                state.activeUser = action.payload;
+            })
     }
 })
 
 export const { newUserSelected } = userSlice.actions;
 
 export const selectUsers = (state: RootState): UserAccount[] => state.users.value;
+export const selectLoginStatus = (state: RootState): 'idle' | 'loading' | 'failed' => state.users.status;
 export const selectActiveUser = (state: RootState): UserAccount | undefined => state.users.activeUser;
 
 export default userSlice.reducer;

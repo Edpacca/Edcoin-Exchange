@@ -1,0 +1,36 @@
+.app-container {
+  text-align: center;
+  font-size: 12px;
+  color: #dbdbdb;
+  padding: 2rem 6rem;
+}
+
+.app-container ::-webkit-scrollbar {
+  width: 10px;
+}
+
+.app-container ::-webkit-scrollbar-thumb {
+  background: #34363f;
+  border-radius: 2px;
+}
+
+.app-container ::-webkit-scrollbar-track {
+  background: #212127c7;
+}
+
+.panel-container {
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: 1fr 2fr;
+      grid-template-columns: 1fr 2fr;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  grid-gap: 2em;
+}
+
+.panel {
+  width: auto;
+  background-color: #212127c7;
+  border-radius: 2px;
+}

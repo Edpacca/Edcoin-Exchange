@@ -26,7 +26,8 @@ export const fetchOrders = createAsyncThunk(
 );
 
 export const createOrder = createAsyncThunk(
-    'orders/orderCreated', async (order: OrderRequest): Promise<Order> => {
+    'orders/orderCreated', 
+    async (order: OrderRequest): Promise<Order> => {
         const response = await fetch(`${process.env.REACT_APP_SERVER}/order`, {
             method: 'POST',
             mode: 'cors',

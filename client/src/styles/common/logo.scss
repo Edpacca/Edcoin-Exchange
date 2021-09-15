@@ -1,0 +1,46 @@
+.idle, .failed {
+    height: 20vmin;
+    opacity: 1;
+    transition: 1s;
+}
+
+.loading {
+    height: 20vmin;
+    opacity: 0;
+    transition: 1s;
+}
+
+.modal-logo {
+    height: 4em;
+    margin: 0.5em;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .top-logo, .modal-logo, .idle, .failed {
+      animation: logo-reverse-spin infinite 10s linear;
+    }
+    .loading {
+        animation: logo-spin infinite 2s linear;
+    }
+}
+
+@keyframes logo-reverse-spin {
+    from {
+        transform: rotate(360deg);
+    }
+    to {
+        transform: rotate(0deg);
+    }
+}
+
+@keyframes logo-spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+
+

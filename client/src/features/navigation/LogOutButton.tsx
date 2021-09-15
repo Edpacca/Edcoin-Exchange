@@ -2,7 +2,7 @@ import { Button } from '@material-ui/core';
 
 export function LogOutButton(props: {hasActiveUser: boolean, logOut: (user: undefined) => void}) {
     return (
-        <div className='logout-button'>
+        <div>
         {
             props.hasActiveUser ?
                <Button 

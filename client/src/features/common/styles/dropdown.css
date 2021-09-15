@@ -1,0 +1,14 @@
+.dropdown {
+  width: 4em;
+  height: 2em;
+  font-weight: bold;
+  font-size: medium;
+  color: #dbdbdb;
+  background-color: #212127c7;
+  border-radius: 8px;
+  text-align-last: center;
+}
+
+.selectUser {
+  width: 18em;
+}

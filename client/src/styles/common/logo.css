@@ -1,0 +1,73 @@
+.idle, .failed {
+  height: 20vmin;
+  opacity: 1;
+  -webkit-transition: 1s;
+  transition: 1s;
+}
+
+.loading {
+  height: 20vmin;
+  opacity: 0;
+  -webkit-transition: 1s;
+  transition: 1s;
+}
+
+.modal-logo {
+  height: 4em;
+  margin: 0.5em;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .top-logo, .modal-logo, .idle, .failed {
+    -webkit-animation: logo-reverse-spin infinite 10s linear;
+            animation: logo-reverse-spin infinite 10s linear;
+  }
+  .loading {
+    -webkit-animation: logo-spin infinite 2s linear;
+            animation: logo-spin infinite 2s linear;
+  }
+}
+
+@-webkit-keyframes logo-reverse-spin {
+  from {
+    -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+  }
+  to {
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+  }
+}
+
+@keyframes logo-reverse-spin {
+  from {
+    -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+  }
+  to {
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+  }
+}
+
+@-webkit-keyframes logo-spin {
+  from {
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+  }
+  to {
+    -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+  }
+}
+
+@keyframes logo-spin {
+  from {
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+  }
+  to {
+    -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+  }
+}

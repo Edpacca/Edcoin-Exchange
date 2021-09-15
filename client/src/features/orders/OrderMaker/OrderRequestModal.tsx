@@ -1,29 +1,24 @@
 import { useState } from 'react';
 import { Modal } from '@material-ui/core';
-import { Order } from '../../../models/order';
 import logo from '../../.././logo.svg';
 import { DirectionType } from '../../../models/directionType';
-import { useAppSelector } from '../../../app/hooks';
-import { selectUsers } from '../../users/userSlice';
-import { Visibility } from '@material-ui/icons';
+import { OrderRequest } from '../../../models/orderRequest';
 
-export default function OrderDetailsModal(props: {order: Order}) {
-    const [open, setOpen] = useState(false);
-    const handleOpen = () => {setOpen(true)};
-    const handleClose = () => {setOpen(false)};
-    const userName = useAppSelector(selectUsers).find(user => user.id === props.order.userId)?.name;
+export function OrderRequestModal(props: {order: OrderRequest, clearOrder: () => void}) {
+    const [open, setOpen] = useState(true);
+    const handleClose = () => {
+        setOpen(false);
+        props.clearOrder();
+    };
     const style = props.order.direction === DirectionType.Buy ? 'buy-order' : 'sell-order';
 
     const body = (
         <div className='modal'>
             <img src={logo} className='modal-logo' alt='logo' />
             <br/>
+            <h3>New order placed</h3>
             <table className='table-modal'>
                 <tbody>
-                    <tr>
-                        <th className='table-label'>User</th>
-                        <td>{userName}</td>
-                    </tr>
                     <tr>
                         <th className='table-label'>Direction</th>
                         <td className={style}>{props.order.direction}</td>
@@ -40,10 +35,6 @@ export default function OrderDetailsModal(props: {order: Order}) {
                         <th className='table-label'>Quantity</th>
                         <td>{props.order.quantity}</td>
                     </tr>
-                    <tr>
-                        <th className='table-label'>Order ID</th>
-                        <td>{props.order.id}</td>
-                    </tr>
                 </tbody>
             </table>
         </div>
@@ -51,11 +42,9 @@ export default function OrderDetailsModal(props: {order: Order}) {
 
     return (
         <div>
-            <button onClick={handleOpen} className='modal-button'><Visibility fontSize={"small"}/></button>
             <Modal open={open} onClose={handleClose}>
                 {body}
             </Modal>
         </div>
     )
-
 }

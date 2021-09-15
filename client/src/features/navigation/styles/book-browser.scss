@@ -1,0 +1,45 @@
+@import '../../../styles/common/colours.scss';
+
+.filter-grid {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    align-items: center;
+  }
+
+  .unit-text {
+    color: $appOrange;
+    font-weight: bold;
+  }
+  
+  .search-text {
+    font-size: medium;
+  }
+  
+  .book-browser {
+    display: grid;
+    padding-top: 2em;
+  }
+  
+  .data {
+    margin: auto;
+    height: 40em;
+    overflow: auto;
+    overflow-x: hidden;
+
+    @media (max-width: 1400px) {
+      height: 20em;
+    }
+  }
+
+
+  
+  .slider-filter {
+    margin: 2em 2em 0 2em;
+  
+    .text {
+      color: $appOrange;
+      margin-bottom: -0.5em;
+      font-weight: bold;
+    }
+  }
+
