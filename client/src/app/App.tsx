@@ -4,7 +4,7 @@ import { ThemeProvider } from '@material-ui/core/styles';
 import { AppTheme } from '../styles/theme';
 import { PrivateNavbar } from '../features/navigation/PrivateNavbar';
 import { PublicNavbar } from '../features/navigation/PublicNavbar';
-import { fetchOrders, selectFilteredPublicOrders, selectFilteredOrdersByUser } from '../features/orders/orderSlice';
+import { fetchOrders, selectFilteredPublicOrders, selectFilteredOrdersByUser, selectOrderStatus } from '../features/orders/orderSlice';
 import { fetchTrades, selectFilteredPublicTrades, selectFilteredTradesByUser } from '../features/trades/tradeSlice';
 import { loginUser, createUser, selectActiveUser, selectLoginStatus } from '../features/users/userSlice';
 import { useAppDispatch, useAppSelector } from './hooks';
@@ -34,6 +34,7 @@ import { UserDispatchProps } from '../models/userDispatchProps';
 import { TopBar } from '../features/navigation/TopBar';
 import { AuthenticationRequest } from '../models/authenticationRequest';
 import { fetchSiteToken, selectInitialisationStatus } from './initialisationSlice';
+import { Status } from '../models/status';
 
 async function initialiseSite() {
   await store.dispatch(fetchSiteToken({
@@ -65,9 +66,9 @@ function App() {
   const logOut = () => dispatch(logout());
   const login = (authenticationRequest: AuthenticationRequest) => dispatch(loginUser(authenticationRequest));
   const createUserAccount = (authenticationRequest: AuthenticationRequest) => dispatch(createUser(authenticationRequest));
-  const loginStatus: 'idle' | 'loading' | 'failed' = useAppSelector(selectLoginStatus);
   const createNewOrder = (order: OrderRequest) => dispatch(createOrder(order));
-  const hasActiveUser = useAppSelector(selectActiveUser) ? true : false;
+  const loginStatus: Status = useAppSelector(selectLoginStatus);
+  const orderStatus: Status = useAppSelector(selectOrderStatus);
   const isConnected = useAppSelector(selectInitialisationStatus) === 'idle';
 
   const filterDispatchesPublic: FilterDispatchProps = { 
@@ -89,8 +90,7 @@ function App() {
       <ThemeProvider theme={AppTheme}>
         <div className='app-container'>
           <TopBar
-            hasActiveUser={hasActiveUser}
-            activeUserName={activeUser?.name}
+            activeUser={activeUser}
             logOut={logOut}/>
             <div className='panel-container'>
               <div className='private' >
@@ -100,9 +100,10 @@ function App() {
                   userDispatches={userDispatches}
                   filterDispatches={filterDispatchesUser}
                   filters={privateFilters}
-                  hasActiveUser={hasActiveUser}
+                  activeUser={activeUser}
                   createOrder={createNewOrder}
                   loginStatus={loginStatus}
+                  orderStatus={orderStatus}
                   />
               </div>
                 <div className='public'>

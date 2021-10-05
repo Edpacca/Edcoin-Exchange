@@ -1,25 +1,25 @@
-.idle, .failed {
+.login-idle, .login-failed {
     height: 20vmin;
     opacity: 1;
     transition: 1s;
 }
 
-.loading {
+.login-loading {
     height: 20vmin;
     opacity: 0;
     transition: 1s;
 }
 
-.modal-logo {
+.modal-idle, .modal-failed, .modal-loading {
     height: 4em;
     margin: 0.5em;
 }
 
 @media (prefers-reduced-motion: no-preference) {
-    .top-logo, .modal-logo, .idle, .failed {
+    .top-logo, .modal-idle, .modal-failed, .login-idle, .login-failed {
       animation: logo-reverse-spin infinite 10s linear;
     }
-    .loading {
+    .modal-loading, .login-loading {
         animation: logo-spin infinite 2s linear;
     }
 }

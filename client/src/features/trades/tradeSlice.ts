@@ -4,9 +4,10 @@ import { Trade } from '../../models/trade';
 import { FilterState, selectPublicFilters, selectPrivateFilters } from '../filters/filterSlice';
 import { rangeFilter } from '../../utilities/filterHelpers';
 import { MarketType } from '../../models/marketType';
+import { Status } from '../../models/status';
 export interface TradesState {
     value: Trade[];
-    status: 'idle' | 'loading' | 'failed';
+    status: Status;
 }
 
 export const initialState: TradesState = {

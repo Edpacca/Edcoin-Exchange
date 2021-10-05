@@ -5,10 +5,11 @@ import { Button, Slider } from '@material-ui/core';
 import { OrderRequest } from '../../../models/orderRequest';
 import { GetAllMarketTypes, MarketType } from '../../../models/marketType';
 import { DropDownSelect } from '../../common/DropdownSelect';
-import { store } from '../../../app/store';
 import { OrderRequestModal } from './OrderRequestModal';
+import { UserAccount } from '../../../models/userAccount';
+import { Status } from '../../../models/status';
 
-export function OrderMaker(props: {createOrder: (order: OrderRequest) => void}, activeUserId: string) {
+export function OrderMaker(props: {createOrder: (order: OrderRequest) => void, activeUser: UserAccount, orderStatus: Status}) {
 
     const [isBuying, setIsBuying] = useState<boolean>(true);
     const [price, setPrice] = useState<number>(50);
@@ -50,11 +51,9 @@ export function OrderMaker(props: {createOrder: (order: OrderRequest) => void}, 
     }
 
     const submit = () => {
-        const userId = store.getState().users.activeUser?.id as string;
-        const token = store.getState().users.jwt as string;
         const order: OrderRequest = {
-            userId: userId,
-            token: token,
+            userId: props.activeUser.id,
+            token: props.activeUser.token,
             market: accountType,
             quantity: quantity,
             price: price,
@@ -78,7 +77,8 @@ export function OrderMaker(props: {createOrder: (order: OrderRequest) => void}, 
                 orderRequest !== undefined &&
                 <OrderRequestModal 
                     order={orderRequest as OrderRequest}
-                    clearOrder = {() => {setOrderRequest(undefined)}}
+                    clearOrder={() => {setOrderRequest(undefined)}}
+                    status={props.orderStatus}
                 />
             }
             <h3>ORDER FORM</h3>
@@ -141,8 +141,8 @@ export function OrderMaker(props: {createOrder: (order: OrderRequest) => void}, 
                     </Button>
                     <Button 
                         onClick={() => setIsBuying(false)}
-                        color={!isBuying ? 'primary' : 'default'}
-                        variant={!isBuying ? 'outlined' : 'text'}
+                        color={isBuying ? 'default' : 'primary'}
+                        variant={isBuying ? 'text' : 'outlined'}
                         >SELL
                     </Button>
                 </div>

@@ -2,11 +2,13 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
 import { AuthenticationRequest } from '../../models/authenticationRequest';
 import { AuthenticationResponse } from '../../models/authenticationResponse';
+import { Status } from '../../models/status';
 import { UserAccount } from '../../models/userAccount';
+import { delay } from '../../utilities/asyncHelpers';
 
 export interface UserState {
     activeUser?: UserAccount,
-    status: 'idle' | 'loading' | 'failed';
+    status: Status;
     jwt?: string;
 }
 
@@ -76,9 +78,9 @@ export const userSlice = createSlice({
                     state.status = 'idle';
                     state.activeUser = {
                         id: action.payload.id,
-                        name: action.payload.username
+                        name: action.payload.username,
+                        token: action.payload.jwt
                     }
-                    state.jwt = action.payload.jwt;
                 } else {
                     state.status ='failed';
                     state.activeUser = undefined;
@@ -96,9 +98,9 @@ export const userSlice = createSlice({
                     state.status = 'idle';
                     state.activeUser = {
                         id: action.payload.id,
-                        name: action.payload.username
+                        name: action.payload.username,
+                        token: action.payload.jwt
                     }
-                    state.jwt = action.payload.jwt;
                 } else {
                     state.status ='failed';
                     state.activeUser = undefined;
@@ -113,12 +115,7 @@ export const userSlice = createSlice({
 
 export const { logout } = userSlice.actions;
 
-export const selectLoginStatus = (state: RootState): 'idle' | 'loading' | 'failed' => state.users.status;
+export const selectLoginStatus = (state: RootState): Status => state.users.status;
 export const selectActiveUser = (state: RootState): UserAccount | undefined => state.users.activeUser;
-export const selectUserToken = (state: RootState): string | undefined => state.users.jwt;
 
 export default userSlice.reducer;
-
-function delay(ms: number) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
