@@ -1,24 +1,24 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
-import { AccountType } from '../../models/accountType';
-import { DirectionType } from '../../models/directionType';
+import { MarketType } from '../../models/marketType';
+import { ExchangeType } from '../../models/exchangeType';
 export interface FilterState {
-    directionFilter: DirectionType;
-    accountFilter: AccountType,
+    directionFilter: ExchangeType;
+    accountFilter: MarketType,
     priceFilter: number[],
     quantityFilter: number[]
 }
 
 const initialState = {
     public: {
-        directionFilter: DirectionType.All,
-        accountFilter: AccountType.All,
+        directionFilter: ExchangeType.All,
+        accountFilter: MarketType.All,
         priceFilter: [0, 100],
         quantityFilter: [0, 100]
     },
     private: {
-        directionFilter: DirectionType.All,
-        accountFilter: AccountType.All,
+        directionFilter: ExchangeType.All,
+        accountFilter: MarketType.All,
         priceFilter: [0, 100],
         quantityFilter: [0, 100]
     }
@@ -28,7 +28,7 @@ export const filterSlice = createSlice({
     name: 'filters',
     initialState,
     reducers: {
-        directionTypeChangedPublic: (state, action: {type: string, payload: DirectionType}) => {
+        directionTypeChangedPublic: (state, action: {type: string, payload: ExchangeType}) => {
             state.public.directionFilter = action.payload;
         },
         accountFilterChangedPublic: (state, action) => {
@@ -42,7 +42,7 @@ export const filterSlice = createSlice({
             state.public.quantityFilter[0] = action.payload[0];
             state.public.quantityFilter[1] = action.payload[1];
         },
-        directionTypeChangedPrivate: (state, action: {type: string, payload: DirectionType}) => {
+        directionTypeChangedPrivate: (state, action: {type: string, payload: ExchangeType}) => {
             state.private.directionFilter = action.payload;
         },
         accountFilterChangedPrivate: (state, action) => {

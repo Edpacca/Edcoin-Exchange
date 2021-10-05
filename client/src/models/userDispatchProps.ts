@@ -1,5 +1,6 @@
-import { UserAccount } from './userAccount';
+import { AuthenticationRequest } from './authenticationRequest';
 export interface UserDispatchProps {
-    changeUser: (user: UserAccount) => void;
+    login: (authenticationRequest: AuthenticationRequest) => void;
     logOut: () => void;
+    createUserAccount: (authenticationRequest: AuthenticationRequest) => void;
 }

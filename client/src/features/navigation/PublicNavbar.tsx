@@ -1,6 +1,7 @@
+import './styles/navBar.css';
 import { useState, ChangeEvent } from 'react';
 import { Tab, Tabs } from '@material-ui/core';
-import { AccountBalanceWallet, ListAlt } from '@material-ui/icons';
+import { AccountBalanceWallet, ListAlt, SentimentDissatisfied } from '@material-ui/icons';
 import { Order } from '../../models/order';
 import { FilterState } from '../filters/filterSlice';
 import { FilterDispatchProps } from '../../models/filterDispatchProps';
@@ -14,6 +15,7 @@ export function PublicNavbar(props:
         trades: Trade[],
         dispatches: FilterDispatchProps,
         filters: FilterState,
+        isConnected: boolean
     }) {
 
     const [activeTab, setActiveTab] = useState(0);
@@ -28,16 +30,18 @@ export function PublicNavbar(props:
         <div className="panel">
                 <Tabs
                 value={activeTab}
-                onChange={handleChange}
-                variant='fullWidth'
-                indicatorColor='primary'
-                textColor='primary'
+                onChange={props.isConnected ? handleChange : undefined}
+                indicatorColor={props.isConnected ? 'primary' : 'secondary'}
+                textColor={props.isConnected ? 'primary' : 'secondary'}
                 aria-label='icon label tabs example'
+                variant='fullWidth'
                 >
                     <Tab icon={<ListAlt />} label='PUBLIC ORDERS' />
                     <Tab icon={<AccountBalanceWallet />} label='TRADE HISTORY' />
                 </Tabs>
-                <div className="inner">
+                {
+                    props.isConnected &&
+                    <div className="inner">
                     {
                         activeTab === 0 &&
                         (<BooksBrowser 
@@ -56,7 +60,18 @@ export function PublicNavbar(props:
                             filters={props.filters}
                             isPrivate={false}/>)
                     }
-                </div>
+                    </div>
+                }
+                {
+                    !props.isConnected &&
+                    <div className="connectionFailed">
+                        <h1>Failed to connect</h1>
+                        <SentimentDissatisfied
+                        fontSize='large'
+                        />
+                        <p>Our servers may be offline. Please try again later</p>
+                    </div>
+                }
         </div>
     )
 }

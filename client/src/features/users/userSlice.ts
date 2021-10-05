@@ -1,17 +1,19 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
+import { AuthenticationRequest } from '../../models/authenticationRequest';
+import { AuthenticationResponse } from '../../models/authenticationResponse';
 import { UserAccount } from '../../models/userAccount';
 
 export interface UserState {
-    value: UserAccount[];
     activeUser?: UserAccount,
     status: 'idle' | 'loading' | 'failed';
+    jwt?: string;
 }
 
 export const initialState: UserState = {
-    value: [],
     activeUser: undefined,
-    status: 'idle'
+    status: 'idle',
+    jwt: undefined
 };
 
 export const fetchUsers = createAsyncThunk(
@@ -24,11 +26,33 @@ export const fetchUsers = createAsyncThunk(
 
 export const loginUser = createAsyncThunk(
     'users/loginUser',
-    async (user: UserAccount): Promise<UserAccount> => {
-        function delay(ms: number) {
-            return new Promise(resolve => setTimeout(resolve, ms));
-        }
-        return await delay(1000).then(() => user);
+    async (authenticationRequest: AuthenticationRequest): Promise<AuthenticationResponse> => {
+        const response: Promise<any> = await fetch(
+            `${process.env.REACT_APP_SERVER}/users/login`, {
+            method: 'POST',
+            mode: 'cors',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(authenticationRequest)})
+        .then(response => response.json());
+        return await delay(1000).then(() => response);
+    }
+)
+
+export const createUser = createAsyncThunk(
+    'users/createUser',
+    async (authenticationRequest: AuthenticationRequest): Promise<AuthenticationResponse> => {
+        const response: Promise<any> = await fetch(
+            `${process.env.REACT_APP_SERVER}/users/signup`, {
+            method: 'POST',
+            mode: 'cors',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(authenticationRequest)})
+        .then(response => response.json());
+        return await delay(1000).then(() => response);
     }
 )
 
@@ -36,36 +60,65 @@ export const userSlice = createSlice({
     name: 'users',
     initialState,
     reducers: {
-        newUserSelected: (state, action) => {
-            state.activeUser = action.payload;
+        logout: (state) => {
+            state.activeUser = undefined;
+            state.jwt = undefined;
+            state.status = 'idle';
         },
     },
     extraReducers: (builder) => {
         builder
-            .addCase(fetchUsers.pending, (state) => {
-                state.status = 'loading';
-            })
-            .addCase(fetchUsers.rejected, (state) => {
-                state.status = 'failed';
-            })
-            .addCase(fetchUsers.fulfilled, (state, action) => {
-                state.status = 'idle';
-                state.value = action.payload;
-            })
             .addCase(loginUser.pending, (state) => {
                 state.status = 'loading';
             })
             .addCase(loginUser.fulfilled, (state, action) => {
-                state.status = 'idle';
-                state.activeUser = action.payload;
+                if (action.payload.jwt) {
+                    state.status = 'idle';
+                    state.activeUser = {
+                        id: action.payload.id,
+                        name: action.payload.username
+                    }
+                    state.jwt = action.payload.jwt;
+                } else {
+                    state.status ='failed';
+                    state.activeUser = undefined;
+                }
             })
+            .addCase(loginUser.rejected, (state) => {
+                state.status = 'failed';
+                state.activeUser = undefined;
+            })
+            .addCase(createUser.pending, (state) => {
+                state.status = 'loading';
+            })
+            .addCase(createUser.fulfilled, (state, action) => {
+                if (action.payload.jwt) {
+                    state.status = 'idle';
+                    state.activeUser = {
+                        id: action.payload.id,
+                        name: action.payload.username
+                    }
+                    state.jwt = action.payload.jwt;
+                } else {
+                    state.status ='failed';
+                    state.activeUser = undefined;
+                }
+            })
+            .addCase(createUser.rejected, (state) => {
+                state.status = 'failed';
+                state.activeUser = undefined;
+            });
     }
 })
 
-export const { newUserSelected } = userSlice.actions;
+export const { logout } = userSlice.actions;
 
-export const selectUsers = (state: RootState): UserAccount[] => state.users.value;
 export const selectLoginStatus = (state: RootState): 'idle' | 'loading' | 'failed' => state.users.status;
 export const selectActiveUser = (state: RootState): UserAccount | undefined => state.users.activeUser;
+export const selectUserToken = (state: RootState): string | undefined => state.users.jwt;
 
 export default userSlice.reducer;
+
+function delay(ms: number) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}

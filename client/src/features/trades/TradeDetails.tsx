@@ -17,7 +17,7 @@ export function RenderTradeDetails(trade: Trade, isPrivate: boolean) {
         <tr key={`${trade.id}${isPrivate}`}>
             <td className='table-data'>{dateFormat(trade.time, 'dd-mm-yy')}</td>
             <td className='table-data'>{dateFormat(trade.time, 'hh:mm:ss')}</td>
-            <td className='table-data'>{trade.account}</td>
+            <td className='table-data'>{trade.market}</td>
             <td className='table-data'>{trade.price.toFixed(4)}</td>
             <td className='table-data'>{trade.quantity}</td>
             {detailsButton}

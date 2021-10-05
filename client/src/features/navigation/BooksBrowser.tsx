@@ -2,10 +2,10 @@ import './styles/book-browser.css';
 import { Slider } from '@material-ui/core';
 import { OrdersBook } from '../orders/orderBooks/OrdersBook';
 import { useState, ChangeEvent } from 'react';
-import { DirectionType } from '../../models/directionType';
+import { ExchangeType } from '../../models/exchangeType';
 import { Order } from '../../models/order';
 import { DropDownSelect } from '../common/DropdownSelect';
-import { GetAllAccountTypes, AccountType } from '../../models/accountType';
+import { GetAllMarketTypes, MarketType } from '../../models/marketType';
 import { FilterState } from '../filters/filterSlice';
 import { FilterDispatchProps } from '../../models/filterDispatchProps';
 import { Trade } from '../../models/trade';
@@ -25,7 +25,7 @@ export function BooksBrowser(props:
     // TODO Lags when passed directly to sliders from store
     const [priceRange, setPriceRange] = useState<number[]>([0, 100]);
     const [quantityRange, setQuantityRange] = useState<number[]>([0, 100]);
-    const selectAccount: string[] = GetAllAccountTypes();
+    const selectAccount: string[] = GetAllMarketTypes();
     const isOrderBook: boolean = props.bookType === BookType.Orders;
     
     const filterPrice = (range: number[]) => {
@@ -45,19 +45,19 @@ export function BooksBrowser(props:
 
     const handleDropDownChange = (event: ChangeEvent<HTMLSelectElement>) => {
         if (event.target.value === "All") {
-            props.dispatches.changeAccountType(AccountType.All);
+            props.dispatches.changeAccountType(MarketType.All);
         } else {
-            const account: AccountType = event.target.value + "-EDC" as AccountType;
+            const account: MarketType = event.target.value as MarketType;
             props.dispatches.changeAccountType(account);
         }
     }
 
-    const handleDirectionTypeFilter = (direction: DirectionType) => {
+    const handleDirectionTypeFilter = (direction: ExchangeType) => {
         props.dispatches.changeDirectionType(direction);
     }
 
     const searchCriteria = props.bookType === BookType.Orders 
-        ?   `${props.filters.accountFilter === AccountType.All ? '' : `${props.filters.accountFilter}:`}\
+        ?   `${props.filters.accountFilter === MarketType.All ? '' : `${props.filters.accountFilter}:`}\
              ${props.filters.directionFilter} orders (${props.values.length})`
         :   `${props.filters.accountFilter} trades (${props.values.length})`;
 

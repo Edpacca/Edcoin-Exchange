@@ -2,17 +2,17 @@ import { useState } from 'react';
 import { Modal } from '@material-ui/core';
 import { Order } from '../../../models/order';
 import logo from '../../.././logo.svg';
-import { DirectionType } from '../../../models/directionType';
+import { ExchangeType } from '../../../models/exchangeType';
 import { useAppSelector } from '../../../app/hooks';
-import { selectUsers } from '../../users/userSlice';
 import { Visibility } from '@material-ui/icons';
+import { selectActiveUser } from '../../users/userSlice';
 
 export default function OrderDetailsModal(props: {order: Order}) {
     const [open, setOpen] = useState(false);
     const handleOpen = () => {setOpen(true)};
     const handleClose = () => {setOpen(false)};
-    const userName = useAppSelector(selectUsers).find(user => user.id === props.order.userId)?.name;
-    const style = props.order.direction === DirectionType.Buy ? 'buy-order' : 'sell-order';
+    const userName = useAppSelector(selectActiveUser)?.name;
+    const style = props.order.exchange === ExchangeType.Buy ? 'buy-order' : 'sell-order';
 
     const body = (
         <div className='modal'>
@@ -26,11 +26,11 @@ export default function OrderDetailsModal(props: {order: Order}) {
                     </tr>
                     <tr>
                         <th className='table-label'>Direction</th>
-                        <td className={style}>{props.order.direction}</td>
+                        <td className={style}>{props.order.exchange}</td>
                     </tr>
                     <tr>
                         <th className='table-label'>Account</th>
-                        <td>{props.order.account}</td>
+                        <td>{props.order.market}</td>
                     </tr>
                     <tr>
                         <th className='table-label'>Price</th>

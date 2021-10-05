@@ -4,8 +4,8 @@ import { OrderRequest } from '../../models/orderRequest';
 import { Order } from '../../models/order';
 import { FilterState, selectPublicFilters, selectPrivateFilters } from '../filters/filterSlice';
 import { rangeFilter } from '../../utilities/filterHelpers';
-import { DirectionType } from '../../models/directionType';
-import { AccountType } from '../../models/accountType';
+import { ExchangeType } from '../../models/exchangeType';
+import { MarketType } from '../../models/marketType';
 export interface OrdersState {
     value: Order[];
     status: 'idle' | 'loading' | 'failed';
@@ -18,8 +18,15 @@ const initialState: OrdersState = {
 
 export const fetchOrders = createAsyncThunk(
     'orders/fetchOrders',
-    async () => {
-        const response = await fetch(`${process.env.REACT_APP_SERVER}/orders`)
+    async (token: string) => {
+        console.log("token: " + token);
+        const response = await fetch(`${process.env.REACT_APP_SERVER}/orders`, {
+            method: 'GET',
+            mode: 'cors',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
         .then(response => response.json())
         return response;
     }
@@ -27,12 +34,13 @@ export const fetchOrders = createAsyncThunk(
 
 export const createOrder = createAsyncThunk(
     'orders/orderCreated', 
-    async (order: OrderRequest): Promise<Order> => {
-        const response = await fetch(`${process.env.REACT_APP_SERVER}/order`, {
+    async (order: OrderRequest): Promise<any> => {
+        const response = await fetch(`${process.env.REACT_APP_SERVER}/orders`, {
             method: 'POST',
             mode: 'cors',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${order.token}`
             },
             body: JSON.stringify(order)
         }).then(response => response.json());
@@ -70,6 +78,7 @@ export const orderSlice = createSlice({
 
 export const selectOrders = (state: RootState): Order[] => state.orders.value;
 
+
 // returns a list of order ids
 export const selectOrderIds = createSelector(
     selectOrders,
@@ -105,13 +114,13 @@ export function filterOrders(orders: Order[], typeFilters: FilterState) {
     
     const ordersByType = (orders: Order[]): Order[] => {
         const ordersByDirection: Order[] = 
-            directionFilter === DirectionType.All 
+            directionFilter === ExchangeType.All 
                 ? orders 
-                : orders.filter(order => order.direction === directionFilter);
+                : orders.filter(order => order.exchange === directionFilter);
 
-            return accountFilter === AccountType.All 
+            return accountFilter === MarketType.All 
                ? ordersByDirection 
-               : ordersByDirection.filter(order => order.account === accountFilter);
+               : ordersByDirection.filter(order => order.market === accountFilter);
     }
 
     const ordersByRange = (orders: Order[]): Order[] => {

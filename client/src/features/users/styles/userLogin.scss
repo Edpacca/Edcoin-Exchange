@@ -1,0 +1,31 @@
+@import '../../../styles/common/colours.scss';
+
+.login-input {
+    display: grid;
+    grid-template-columns: 20em;
+    margin: 2em 0em 2em 0em;
+    justify-content: center;
+    align-items: center;
+    grid-gap: 1rem;
+    font-size: medium;
+
+    
+    .input {
+      background-color: $appGrey2;
+      border-width: 0px;
+      color: $appOffWhite;
+      font-size: medium;
+      padding-left: 1em;
+      height: 1.5em;
+      border-radius: 6px;
+    }
+
+    .error {
+      width: 15em;
+      text-align: center;
+    }
+}
+
+.login-panel {
+  padding: 4em;
+}

@@ -1,9 +1,10 @@
-import { AccountType } from './accountType';
-import { DirectionType } from './directionType';
+import { MarketType } from './marketType';
+import { ExchangeType } from './exchangeType';
 export interface OrderRequest {
-    readonly account: AccountType;
+    readonly market: MarketType;
     readonly quantity: number;
     readonly price: number;
-    readonly direction: DirectionType;
+    readonly exchange: ExchangeType;
     readonly userId: string;
+    readonly token: string;
 }

@@ -4,7 +4,6 @@ import { AccountBalanceWallet, ListAlt, MonetizationOn } from '@material-ui/icon
 import { OrderMaker } from '../orders/OrderMaker/OrderMaker';
 import { Order } from '../../models/order';
 import { UserLogin } from '../users/UserLogin';
-import { UserAccount } from '../../models/userAccount';
 import { OrderRequest } from '../../models/orderRequest';
 import { FilterState } from '../filters/filterSlice';
 import { FilterDispatchProps } from '../../models/filterDispatchProps';
@@ -16,7 +15,6 @@ import { Trade } from '../../models/trade';
 export function PrivateNavbar(props: {
         orders: Order[],
         trades: Trade[],
-        users: UserAccount[],
         userDispatches: UserDispatchProps,
         filterDispatches: FilterDispatchProps,
         filters: FilterState,
@@ -49,8 +47,8 @@ export function PrivateNavbar(props: {
                 {
                     !props.hasActiveUser &&
                     (<UserLogin
-                        users={props.users}
-                        changeUserDispatch={props.userDispatches.changeUser}
+                        loginDispatch={props.userDispatches.login}
+                        createUserDispatch={props.userDispatches.createUserAccount}
                         loginStatus={props.loginStatus}/>)
                 }
                 {

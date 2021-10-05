@@ -3,7 +3,7 @@ import { RootState } from '../../app/store';
 import { Trade } from '../../models/trade';
 import { FilterState, selectPublicFilters, selectPrivateFilters } from '../filters/filterSlice';
 import { rangeFilter } from '../../utilities/filterHelpers';
-import { AccountType } from '../../models/accountType';
+import { MarketType } from '../../models/marketType';
 export interface TradesState {
     value: Trade[];
     status: 'idle' | 'loading' | 'failed';
@@ -16,8 +16,14 @@ export const initialState: TradesState = {
 
 export const fetchTrades = createAsyncThunk(
     'trades/fetchTrades',
-    async () => {
-        const response = await fetch(`${process.env.REACT_APP_SERVER}/trades`)
+    async (token: string) => {
+        const response = await fetch(`${process.env.REACT_APP_SERVER}/trades`, {
+            method: 'GET',
+            mode: 'cors',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
         .then(response => response.json())
         return response;
     }
@@ -59,8 +65,8 @@ export const selectFilteredTradesByUser = createSelector(
     (trades, activeUser) => {
         if (!activeUser) return [];
         return trades.filter(
-            trade => trade.userId1 === activeUser.id ||
-                trade.userId2 === activeUser.id);
+            trade => trade.buyUserId === activeUser.id ||
+                trade.sellUserId === activeUser.id);
     }
 )
 
@@ -68,9 +74,9 @@ export function filterTrades(trades: Trade[], typeFilters: FilterState) {
     const { accountFilter, priceFilter, quantityFilter } = typeFilters;
 
     const tradesByType = (trades: Trade[]): Trade[] => {
-        return accountFilter === AccountType.All
+        return accountFilter === MarketType.All
         ? trades
-        : trades.filter(trade => trade.account === accountFilter);
+        : trades.filter(trade => trade.market === accountFilter);
     }
 
     const tradesByRange = (trades: Trade[]): Trade[] => {

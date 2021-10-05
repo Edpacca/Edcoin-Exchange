@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Modal } from '@material-ui/core';
 import logo from '../../.././logo.svg';
-import { DirectionType } from '../../../models/directionType';
+import { ExchangeType } from '../../../models/exchangeType';
 import { OrderRequest } from '../../../models/orderRequest';
 
 export function OrderRequestModal(props: {order: OrderRequest, clearOrder: () => void}) {
@@ -10,7 +10,7 @@ export function OrderRequestModal(props: {order: OrderRequest, clearOrder: () =>
         setOpen(false);
         props.clearOrder();
     };
-    const style = props.order.direction === DirectionType.Buy ? 'buy-order' : 'sell-order';
+    const style = props.order.exchange === ExchangeType.Buy ? 'buy-order' : 'sell-order';
 
     const body = (
         <div className='modal'>
@@ -21,11 +21,11 @@ export function OrderRequestModal(props: {order: OrderRequest, clearOrder: () =>
                 <tbody>
                     <tr>
                         <th className='table-label'>Direction</th>
-                        <td className={style}>{props.order.direction}</td>
+                        <td className={style}>{props.order.exchange}</td>
                     </tr>
                     <tr>
                         <th className='table-label'>Account</th>
-                        <td>{props.order.account}</td>
+                        <td>{props.order.market}</td>
                     </tr>
                     <tr>
                         <th className='table-label'>Price</th>

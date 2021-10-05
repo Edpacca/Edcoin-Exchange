@@ -6,12 +6,12 @@ import { PrivateNavbar } from '../features/navigation/PrivateNavbar';
 import { PublicNavbar } from '../features/navigation/PublicNavbar';
 import { fetchOrders, selectFilteredPublicOrders, selectFilteredOrdersByUser } from '../features/orders/orderSlice';
 import { fetchTrades, selectFilteredPublicTrades, selectFilteredTradesByUser } from '../features/trades/tradeSlice';
-import { fetchUsers, loginUser, selectActiveUser, selectLoginStatus, selectUsers } from '../features/users/userSlice';
+import { loginUser, createUser, selectActiveUser, selectLoginStatus } from '../features/users/userSlice';
 import { useAppDispatch, useAppSelector } from './hooks';
 import { UserAccount } from '../models/userAccount';
-import { AccountType } from '../models/accountType';
-import { DirectionType } from '../models/directionType';
-import { newUserSelected } from '../features/users/userSlice';
+import { MarketType } from '../models/marketType';
+import { ExchangeType } from '../models/exchangeType';
+import { logout } from '../features/users/userSlice';
 import { OrderRequest } from '../models/orderRequest';
 import { createOrder } from '../features/orders/orderSlice';
 import { FilterDispatchProps } from '../models/filterDispatchProps';
@@ -32,16 +32,29 @@ import { Order } from '../models/order';
 import { Trade } from '../models/trade';
 import { UserDispatchProps } from '../models/userDispatchProps';
 import { TopBar } from '../features/navigation/TopBar';
+import { AuthenticationRequest } from '../models/authenticationRequest';
+import { fetchSiteToken, selectInitialisationStatus } from './initialisationSlice';
 
-store.dispatch(fetchOrders());
-store.dispatch(fetchTrades());
-store.dispatch(fetchUsers());
+async function initialiseSite() {
+  await store.dispatch(fetchSiteToken({
+    username: 'website',
+    password: 'website'
+  })).then(() => {
+    const token = store.getState().initialisation.siteToken;
+    if (token) {
+      store.dispatch(fetchOrders(token));
+      store.dispatch(fetchTrades(token));
+    }
+  });
+}
+
+initialiseSite();
 
 function App() {
 
   const userOrders: Order[] = useAppSelector(selectFilteredOrdersByUser);
   const userTrades: Trade[] = useAppSelector(selectFilteredTradesByUser);
-  const users: UserAccount[] = useAppSelector(selectUsers);
+  const activeUser: UserAccount | undefined = useAppSelector(selectActiveUser);
   const privateFilters: FilterState = useAppSelector(selectPrivateFilters);
 
   const publicOrders: Order[] = useAppSelector(selectFilteredPublicOrders);
@@ -49,26 +62,27 @@ function App() {
   const publicFilters: FilterState = useAppSelector(selectPublicFilters);
 
   const dispatch = useAppDispatch();
-  const logOut = () => dispatch(newUserSelected(undefined));
-  // const changeUser = (user: UserAccount) => dispatch(newUserSelected(user));
+  const logOut = () => dispatch(logout());
+  const login = (authenticationRequest: AuthenticationRequest) => dispatch(loginUser(authenticationRequest));
+  const createUserAccount = (authenticationRequest: AuthenticationRequest) => dispatch(createUser(authenticationRequest));
   const loginStatus: 'idle' | 'loading' | 'failed' = useAppSelector(selectLoginStatus);
-  const changeUser = (user: UserAccount) => dispatch(loginUser(user));
   const createNewOrder = (order: OrderRequest) => dispatch(createOrder(order));
   const hasActiveUser = useAppSelector(selectActiveUser) ? true : false;
+  const isConnected = useAppSelector(selectInitialisationStatus) === 'idle';
 
   const filterDispatchesPublic: FilterDispatchProps = { 
     filterPrice: (range: number[]) => dispatch(priceFilterChangedPublic(range)),
     filterQuantity: (range: number[]) => dispatch(quantityFilterChangedPublic(range)), 
-    changeAccountType: (account: AccountType) => dispatch(accountFilterChangedPublic(account)), 
-    changeDirectionType: (direction: DirectionType) => dispatch(directionTypeChangedPublic(direction)) 
+    changeAccountType: (account: MarketType) => dispatch(accountFilterChangedPublic(account)), 
+    changeDirectionType: (direction: ExchangeType) => dispatch(directionTypeChangedPublic(direction)) 
   }
   const filterDispatchesUser: FilterDispatchProps = {
      filterPrice: (range: number[]) => dispatch(priceFilterChangedPrivate(range)), 
      filterQuantity: (range: number[]) => dispatch(quantityFilterChangedPrivate(range)), 
-     changeAccountType: (account: AccountType) => dispatch(accountFilterChangedPrivate(account)), 
-     changeDirectionType: (direction: DirectionType) => dispatch(directionTypeChangedPrivate(direction)) 
+     changeAccountType: (account: MarketType) => dispatch(accountFilterChangedPrivate(account)), 
+     changeDirectionType: (direction: ExchangeType) => dispatch(directionTypeChangedPrivate(direction)) 
   }
-  const userDispatches: UserDispatchProps = { logOut, changeUser }
+  const userDispatches: UserDispatchProps = { logOut, login, createUserAccount }
 
   return (
     <div>
@@ -76,13 +90,13 @@ function App() {
         <div className='app-container'>
           <TopBar
             hasActiveUser={hasActiveUser}
+            activeUserName={activeUser?.name}
             logOut={logOut}/>
             <div className='panel-container'>
               <div className='private' >
               <PrivateNavbar 
                   orders={userOrders}
                   trades={userTrades}
-                  users={users}
                   userDispatches={userDispatches}
                   filterDispatches={filterDispatchesUser}
                   filters={privateFilters}
@@ -91,14 +105,15 @@ function App() {
                   loginStatus={loginStatus}
                   />
               </div>
-              <div className='public'>
+                <div className='public'>
                 <PublicNavbar
                   orders={publicOrders}
                   trades={publicTrades}
                   dispatches={filterDispatchesPublic}
                   filters={publicFilters}
+                  isConnected={isConnected}
                 />
-              </div>
+                </div>
             </div>
         </div>
       </ThemeProvider>

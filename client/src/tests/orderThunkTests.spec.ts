@@ -1,16 +1,16 @@
 import { OrderRequest } from '../models/orderRequest';
 import reducer, { createOrder, fetchOrders, OrdersState } from '../features/orders/orderSlice';
 import { Dispatch } from 'redux';
-import { AccountType } from '../models/accountType';
-import { DirectionType } from '../models/directionType';
+import { MarketType } from '../models/marketType';
+import { ExchangeType } from '../models/exchangeType';
 require ('jest-fetch-mock').enableMocks();
 
 describe('createOrder async thunk', () => {
 
-    const orderRequest: OrderRequest = { userId: '0', account: AccountType.CAD, 
-        direction: DirectionType.Buy, price: 10, quantity: 60 }
+    const orderRequest: OrderRequest = { userId: '0', market: MarketType.CAD, 
+        exchange: ExchangeType.Buy, price: 10, quantity: 60 }
     const orderResponse = { id: '0', userId: '0',
-        account: AccountType.CAD, direction: DirectionType.Buy, price: 10, quantity: 60 };
+        account: MarketType.CAD, direction: ExchangeType.Buy, price: 10, quantity: 60 };
     
     let dispatch: Dispatch;
 
@@ -68,7 +68,7 @@ describe('fetchOrders async thunk', () => {
 
     // no Date because json returns a string and can't compare to date
     const order0 = { id: '0', userId: '0',
-        account: AccountType.CAD, direction: DirectionType.Buy, price: 10, quantity: 60 };
+        account: MarketType.CAD, direction: ExchangeType.Buy, price: 10, quantity: 60 };
     
     let dispatch: Dispatch;
 

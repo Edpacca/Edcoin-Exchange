@@ -8,8 +8,8 @@ import reducer, {
     priceFilterChangedPrivate,
     quantityFilterChangedPrivate,
 } from '../features/filters/filterSlice';
-import { AccountType } from '../models/accountType';
-import { DirectionType } from '../models/directionType';
+import { MarketType } from '../models/marketType';
+import { ExchangeType } from '../models/exchangeType';
 
 describe('filterSlice reducer actions', () =>{
 
@@ -17,14 +17,14 @@ describe('filterSlice reducer actions', () =>{
         expect(reducer(undefined, {type: ""})).toEqual(
             {
                 public: {
-                    directionFilter: DirectionType.All,
-                    accountFilter: AccountType.All,
+                    directionFilter: ExchangeType.All,
+                    accountFilter: MarketType.All,
                     priceFilter: [0, 100],
                     quantityFilter: [0, 100]
                 },
                 private: {
-                    directionFilter: DirectionType.All,
-                    accountFilter: AccountType.All,
+                    directionFilter: ExchangeType.All,
+                    accountFilter: MarketType.All,
                     priceFilter: [0, 100],
                     quantityFilter: [0, 100]
                 }
@@ -34,9 +34,9 @@ describe('filterSlice reducer actions', () =>{
     // Direction type
     describe(`on ${directionTypeChangedPublic.type}`, () => {
         it('should set the public direction type filter', () => {
-            const testFilter = DirectionType.Buy;
+            const testFilter = ExchangeType.Buy;
             const { public: { directionFilter } } = reducer(
-                undefined,directionTypeChangedPublic(DirectionType.Buy));
+                undefined,directionTypeChangedPublic(ExchangeType.Buy));
 
             expect(directionFilter).toEqual(testFilter);
         });
@@ -44,9 +44,9 @@ describe('filterSlice reducer actions', () =>{
 
     describe(`on ${directionTypeChangedPrivate.type}`, () => {
         it('should set the private direction type filter', () => {
-            const testFilter = DirectionType.Buy;
+            const testFilter = ExchangeType.Buy;
             const { private: { directionFilter } } = reducer(
-                undefined,directionTypeChangedPrivate(DirectionType.Buy));
+                undefined,directionTypeChangedPrivate(ExchangeType.Buy));
 
             expect(directionFilter).toEqual(testFilter);
         });
@@ -55,9 +55,9 @@ describe('filterSlice reducer actions', () =>{
     // Account type
     describe(`on ${accountFilterChangedPublic.type}`, () => {
         it('should set the public account type filter', () => {
-            const testFilter = AccountType.CHF;
+            const testFilter = MarketType.CHF;
             const { public: { accountFilter } } = reducer(
-                undefined,accountFilterChangedPublic(AccountType.CHF));
+                undefined,accountFilterChangedPublic(MarketType.CHF));
 
             expect(accountFilter).toEqual(testFilter);
         });
@@ -65,9 +65,9 @@ describe('filterSlice reducer actions', () =>{
 
     describe(`on ${accountFilterChangedPrivate.type}`, () => {
         it('should set the private account type filter', () => {
-            const testFilter = AccountType.CHF;
+            const testFilter = MarketType.CHF;
             const { private: { accountFilter } } = reducer(
-                undefined,accountFilterChangedPrivate(AccountType.CHF));
+                undefined,accountFilterChangedPrivate(MarketType.CHF));
 
             expect(accountFilter).toEqual(testFilter);
         });

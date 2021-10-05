@@ -11,7 +11,7 @@ export function TradesBook(props: {trades: Trade[], isPrivate: boolean}) {
                 <tr>
                     <th className='table-label'>Date</th>
                     <th className='table-label'>Time</th>
-                    <th className='table-label'>Account</th>
+                    <th className='table-label'>Market</th>
                     <th className='table-label'>Price</th>
                     <th className='table-label'>Quantity</th>
                     {props.isPrivate ? detailsHeader : undefined}

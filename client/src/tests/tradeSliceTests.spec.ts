@@ -1,16 +1,16 @@
 import { FilterState } from '../features/filters/filterSlice';
 import { filterTrades } from '../features/trades/tradeSlice';
-import { AccountType } from '../models/accountType';
-import { DirectionType } from '../models/directionType';
+import { MarketType } from '../models/marketType';
+import { ExchangeType } from '../models/exchangeType';
 import { Trade } from '../models/trade';
 
 describe('tradeslice filter function', () => {
-    const otherData = { id: "0", orderId1: "0", orderId2: "0", userId1: "0", userId2: "0", time: new Date() }
+    const otherData = { id: "0", buyOrderId: "0", sellOrderId: "0", buyUserId: "0", sellUserId: "0", time: new Date() }
 
-    const trade0: Trade = { account: AccountType.CAD, price: 10, quantity: 60, ...otherData }
-    const trade1: Trade = { account: AccountType.CAD, price: 20, quantity: 70, ...otherData }
-    const trade2: Trade = { account: AccountType.USD, price: 60, quantity: 10, ...otherData }
-    const trade3: Trade = { account: AccountType.USD, price: 70, quantity: 20, ...otherData }
+    const trade0: Trade = { market: MarketType.CAD, price: 10, quantity: 60, ...otherData }
+    const trade1: Trade = { market: MarketType.CAD, price: 20, quantity: 70, ...otherData }
+    const trade2: Trade = { market: MarketType.USD, price: 60, quantity: 10, ...otherData }
+    const trade3: Trade = { market: MarketType.USD, price: 70, quantity: 20, ...otherData }
     
     const trades = [ trade0, trade1, trade2, trade3 ];
 
@@ -18,8 +18,8 @@ describe('tradeslice filter function', () => {
     describe('no filter conditions*', () => {
         it('should return the original list of orders', () => {
             const filtersAll: FilterState = {
-                directionFilter: DirectionType.All,
-                accountFilter: AccountType.All,
+                directionFilter: ExchangeType.All,
+                accountFilter: MarketType.All,
                 priceFilter: [0, 100],
                 quantityFilter: [0, 100]
             }
@@ -30,8 +30,8 @@ describe('tradeslice filter function', () => {
     describe('filter by account type', () => {
         it('should only return ordefs with CFH account types', () => {
             const filtersCAD: FilterState = {
-                directionFilter: DirectionType.All,
-                accountFilter: AccountType.CAD,
+                directionFilter: ExchangeType.All,
+                accountFilter: MarketType.CAD,
                 priceFilter: [0, 100],
                 quantityFilter: [0, 100]
             }
@@ -42,8 +42,8 @@ describe('tradeslice filter function', () => {
     describe('filter by price range', () => {
         it('should only return orders within the specified price range', () => {
             const filtersPriceLow: FilterState = {
-                directionFilter: DirectionType.All,
-                accountFilter: AccountType.All,
+                directionFilter: ExchangeType.All,
+                accountFilter: MarketType.All,
                 priceFilter: [0, 50],
                 quantityFilter: [0, 100]
             }
@@ -51,8 +51,8 @@ describe('tradeslice filter function', () => {
         });
         it('should only return orders within the specified price range', () => {
             const filtersPriceHigh: FilterState = {
-                directionFilter: DirectionType.All,
-                accountFilter: AccountType.All,
+                directionFilter: ExchangeType.All,
+                accountFilter: MarketType.All,
                 priceFilter: [50, 100],
                 quantityFilter: [0, 100]
             }
@@ -63,8 +63,8 @@ describe('tradeslice filter function', () => {
     describe('filter by quantity range', () => {
         it('should only return orders within the specified quantity range', () => {
             const filtersQuantityLow: FilterState = {
-                directionFilter: DirectionType.All,
-                accountFilter: AccountType.All,
+                directionFilter: ExchangeType.All,
+                accountFilter: MarketType.All,
                 priceFilter: [0, 100],
                 quantityFilter: [0, 50]
             }
@@ -74,8 +74,8 @@ describe('tradeslice filter function', () => {
 
         it('should only return orders within the specified quantity range', () => {
             const filtersQuantityHigh: FilterState = {
-                directionFilter: DirectionType.All,
-                accountFilter: AccountType.All,
+                directionFilter: ExchangeType.All,
+                accountFilter: MarketType.All,
                 priceFilter: [0, 100],
                 quantityFilter: [50, 100]
             }
@@ -86,8 +86,8 @@ describe('tradeslice filter function', () => {
     describe('combinations of different filters', () => {
         it('should filter by price and quantity', () => {
             const filtersPriceQuantity: FilterState = {
-                directionFilter: DirectionType.All,
-                accountFilter: AccountType.All,
+                directionFilter: ExchangeType.All,
+                accountFilter: MarketType.All,
                 priceFilter: [0, 15],
                 quantityFilter: [50, 70]
             }
@@ -95,8 +95,8 @@ describe('tradeslice filter function', () => {
         });
         it('should filter by price, quantity and account type', () => {
             const filtersPriceQuantityAccount: FilterState = {
-                directionFilter: DirectionType.All,
-                accountFilter: AccountType.USD,
+                directionFilter: ExchangeType.All,
+                accountFilter: MarketType.USD,
                 priceFilter: [65, 75],
                 quantityFilter: [15, 25]
             }

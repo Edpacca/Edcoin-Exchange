@@ -1,9 +1,9 @@
-import { AccountType } from './accountType';
-import { DirectionType } from './directionType';
+import { MarketType } from './marketType';
+import { ExchangeType } from './exchangeType';
 
 export interface FilterDispatchProps {
     filterPrice: (range: number[]) => void;
     filterQuantity: (range: number[]) => void;
-    changeAccountType: (account: AccountType) => void;
-    changeDirectionType:(direction: DirectionType) => void;
+    changeAccountType: (account: MarketType) => void;
+    changeDirectionType:(direction: ExchangeType) => void;
 }

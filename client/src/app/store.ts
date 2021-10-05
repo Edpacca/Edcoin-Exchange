@@ -3,6 +3,7 @@ import orderSlice from '../features/orders/orderSlice';
 import tradeSlice from '../features/trades/tradeSlice';
 import userSlice from '../features/users/userSlice';
 import filterSlice from '../features/filters/filterSlice';
+import initialisationSlice from './initialisationSlice';
 
 export const store = configureStore({
     reducer: {
@@ -10,6 +11,7 @@ export const store = configureStore({
       trades: tradeSlice,
       users: userSlice,
       filters: filterSlice,
+      initialisation: initialisationSlice
     }
 });
 

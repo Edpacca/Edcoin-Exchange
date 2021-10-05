@@ -1,21 +1,21 @@
 import './styles/orderMaker.css';
-import { DirectionType } from '../../../models/directionType';
+import { ExchangeType } from '../../../models/exchangeType';
 import React, { useState, ChangeEvent } from 'react';
 import { Button, Slider } from '@material-ui/core';
 import { OrderRequest } from '../../../models/orderRequest';
-import { GetAllAccountTypes, AccountType } from '../../../models/accountType';
+import { GetAllMarketTypes, MarketType } from '../../../models/marketType';
 import { DropDownSelect } from '../../common/DropdownSelect';
 import { store } from '../../../app/store';
 import { OrderRequestModal } from './OrderRequestModal';
 
-export function OrderMaker(props: {createOrder: (order: OrderRequest) => void}) {
+export function OrderMaker(props: {createOrder: (order: OrderRequest) => void}, activeUserId: string) {
 
     const [isBuying, setIsBuying] = useState<boolean>(true);
     const [price, setPrice] = useState<number>(50);
     const [quantity, setQuantity] = useState<number>(1);
     const [priceString, setPriceString] = useState<string>(price.toString());
     const [quantityString, setQuantityString] = useState<string>(quantity.toString());
-    const [accountType, setAccountType] = useState<AccountType>(AccountType.USD);
+    const [accountType, setAccountType] = useState<MarketType>(MarketType.USD);
 
     const [orderRequest, setOrderRequest] = useState<OrderRequest | undefined>(undefined);
     
@@ -27,9 +27,8 @@ export function OrderMaker(props: {createOrder: (order: OrderRequest) => void}) 
     }
 
     const handleDropDownChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        const account = `${event.target.value}-EDC`;
-        setAccountType(account as AccountType);
-        console.log(account);
+        const account = `${event.target.value}`;
+        setAccountType(account as MarketType);
     }
 
     const handleInputChange = (event: ChangeEvent<HTMLInputElement>,
@@ -52,14 +51,16 @@ export function OrderMaker(props: {createOrder: (order: OrderRequest) => void}) 
 
     const submit = () => {
         const userId = store.getState().users.activeUser?.id as string;
+        const token = store.getState().users.jwt as string;
         const order: OrderRequest = {
             userId: userId,
-            account: accountType,
+            token: token,
+            market: accountType,
             quantity: quantity,
             price: price,
-            direction: isBuying 
-                ? DirectionType.Buy 
-                : DirectionType.Sell,
+            exchange: isBuying 
+                ? ExchangeType.Buy 
+                : ExchangeType.Sell,
         }
         props.createOrder(order);
         setOrderRequest(order);
@@ -111,7 +112,7 @@ export function OrderMaker(props: {createOrder: (order: OrderRequest) => void}) 
                             className="input"
                             value={quantityString} 
                             onChange={(event) => 
-                                handleInputChange(event, setQuantity, undefined)}
+                                handleInputChange(event, setQuantity, setQuantityString)}
                         />
                         <span className="units">EDC</span>
                     </div>
@@ -127,7 +128,7 @@ export function OrderMaker(props: {createOrder: (order: OrderRequest) => void}) 
             </div>
             <div className="order-filters">
                 <DropDownSelect 
-                    values={GetAllAccountTypes().filter(type => type !== "All")}
+                    values={GetAllMarketTypes().filter(type => type !== "All")}
                     id={'selectAccount'}
                     onChange={handleDropDownChange}
                 />
