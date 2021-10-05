@@ -21,7 +21,6 @@ const initialState: OrdersState = {
 export const fetchOrders = createAsyncThunk(
     'orders/fetchOrders',
     async (token: string) => {
-        console.log("token: " + token);
         const response = await fetch(`${process.env.REACT_APP_SERVER}/orders`, {
             method: 'GET',
             mode: 'cors',

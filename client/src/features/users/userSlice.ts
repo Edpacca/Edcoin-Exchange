@@ -9,22 +9,12 @@ import { delay } from '../../utilities/asyncHelpers';
 export interface UserState {
     activeUser?: UserAccount,
     status: Status;
-    jwt?: string;
 }
 
 export const initialState: UserState = {
     activeUser: undefined,
     status: 'idle',
-    jwt: undefined
 };
-
-export const fetchUsers = createAsyncThunk(
-    'users/fetchUsers', 
-    async () =>  { 
-        return await fetch(`${process.env.REACT_APP_SERVER}/users`)
-        .then(response => response.json()); 
-    }
-);
 
 export const loginUser = createAsyncThunk(
     'users/loginUser',
@@ -64,7 +54,6 @@ export const userSlice = createSlice({
     reducers: {
         logout: (state) => {
             state.activeUser = undefined;
-            state.jwt = undefined;
             state.status = 'idle';
         },
     },
