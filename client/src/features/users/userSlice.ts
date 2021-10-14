@@ -2,27 +2,19 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
 import { AuthenticationRequest } from '../../models/authenticationRequest';
 import { AuthenticationResponse } from '../../models/authenticationResponse';
+import { Status } from '../../models/status';
 import { UserAccount } from '../../models/userAccount';
+import { delay } from '../../utilities/asyncHelpers';
 
 export interface UserState {
     activeUser?: UserAccount,
-    status: 'idle' | 'loading' | 'failed';
-    jwt?: string;
+    status: Status;
 }
 
 export const initialState: UserState = {
     activeUser: undefined,
     status: 'idle',
-    jwt: undefined
 };
-
-export const fetchUsers = createAsyncThunk(
-    'users/fetchUsers', 
-    async () =>  { 
-        return await fetch(`${process.env.REACT_APP_SERVER}/users`)
-        .then(response => response.json()); 
-    }
-);
 
 export const loginUser = createAsyncThunk(
     'users/loginUser',
@@ -62,7 +54,6 @@ export const userSlice = createSlice({
     reducers: {
         logout: (state) => {
             state.activeUser = undefined;
-            state.jwt = undefined;
             state.status = 'idle';
         },
     },
@@ -76,9 +67,9 @@ export const userSlice = createSlice({
                     state.status = 'idle';
                     state.activeUser = {
                         id: action.payload.id,
-                        name: action.payload.username
+                        name: action.payload.username,
+                        token: action.payload.jwt
                     }
-                    state.jwt = action.payload.jwt;
                 } else {
                     state.status ='failed';
                     state.activeUser = undefined;
@@ -96,9 +87,9 @@ export const userSlice = createSlice({
                     state.status = 'idle';
                     state.activeUser = {
                         id: action.payload.id,
-                        name: action.payload.username
+                        name: action.payload.username,
+                        token: action.payload.jwt
                     }
-                    state.jwt = action.payload.jwt;
                 } else {
                     state.status ='failed';
                     state.activeUser = undefined;
@@ -113,12 +104,7 @@ export const userSlice = createSlice({
 
 export const { logout } = userSlice.actions;
 
-export const selectLoginStatus = (state: RootState): 'idle' | 'loading' | 'failed' => state.users.status;
+export const selectLoginStatus = (state: RootState): Status => state.users.status;
 export const selectActiveUser = (state: RootState): UserAccount | undefined => state.users.activeUser;
-export const selectUserToken = (state: RootState): string | undefined => state.users.jwt;
 
 export default userSlice.reducer;
-
-function delay(ms: number) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}

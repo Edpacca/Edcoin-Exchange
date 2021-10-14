@@ -22,7 +22,6 @@ export function BooksBrowser(props:
         isPrivate: boolean
     }) {
 
-    // TODO Lags when passed directly to sliders from store
     const [priceRange, setPriceRange] = useState<number[]>([0, 100]);
     const [quantityRange, setQuantityRange] = useState<number[]>([0, 100]);
     const selectAccount: string[] = GetAllMarketTypes();

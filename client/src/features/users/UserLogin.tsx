@@ -3,10 +3,11 @@ import { Button, TextField } from '@material-ui/core';
 import logo from '../../logo.svg';
 import { AuthenticationRequest } from '../../models/authenticationRequest';
 import { useState, ChangeEvent, KeyboardEvent } from 'react';
+import { Status } from '../../models/status';
 
 export function UserLogin(props: { loginDispatch: (authenticationRequest: AuthenticationRequest) => void,
     createUserDispatch: (authenticationRequest: AuthenticationRequest) => void,
-    loginStatus: 'idle' | 'loading' | 'failed'}) {
+    loginStatus: Status}) {
 
     const [username, setUsername] = useState<string>("");
     const [password, setPassword] = useState<string>("");
@@ -60,7 +61,7 @@ export function UserLogin(props: { loginDispatch: (authenticationRequest: Authen
     return (
         <div className='login-panel'>
             <div>
-                <img src={logo} className={`App-logo ${props.loginStatus}`} alt='logo' />
+                <img src={logo} className={`login-${props.loginStatus}`} alt='logo' />
                 <div 
                     className='login-input' 
                     onKeyPress={(e) => handleKeyPress(e, 'Enter')}>

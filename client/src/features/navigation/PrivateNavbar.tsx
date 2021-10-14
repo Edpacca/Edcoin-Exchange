@@ -11,6 +11,8 @@ import { UserDispatchProps } from '../../models/userDispatchProps';
 import { BooksBrowser } from './BooksBrowser';
 import { BookType } from '../../models/bookType';
 import { Trade } from '../../models/trade';
+import { UserAccount } from '../../models/userAccount';
+import { Status } from '../../models/status';
 
 export function PrivateNavbar(props: {
         orders: Order[],
@@ -18,8 +20,9 @@ export function PrivateNavbar(props: {
         userDispatches: UserDispatchProps,
         filterDispatches: FilterDispatchProps,
         filters: FilterState,
-        hasActiveUser: boolean,
-        loginStatus: 'idle' | 'loading' | 'failed',
+        activeUser: UserAccount | undefined,
+        loginStatus: Status,
+        orderStatus: Status,
         createOrder: (order: OrderRequest) => Promise<any>,
     }) {
 
@@ -31,32 +34,39 @@ export function PrivateNavbar(props: {
 
     return (
         <div className="panel">
-            <Tabs
-            value={activeTab}
-            onChange={handleChange}
-            variant='fullWidth'
-            indicatorColor='primary'
-            textColor='primary'
-            aria-label='icon label tabs example'
-            >
-                <Tab icon={<MonetizationOn />} label='NEW ORDER' />
-                <Tab icon={<ListAlt />} label='ACTIVE ORDERS' />
-                <Tab icon={<AccountBalanceWallet />} label='MY TRADES' />
-            </Tabs>
+            {
+                props.activeUser &&
+                <Tabs
+                value={activeTab}
+                onChange={handleChange}
+                variant='fullWidth'
+                indicatorColor='primary'
+                textColor='primary'
+                aria-label='icon label tabs example'
+                >
+                    <Tab icon={<MonetizationOn />} label='NEW ORDER' />
+                    <Tab icon={<ListAlt />} label='ACTIVE ORDERS' />
+                    <Tab icon={<AccountBalanceWallet />} label='MY TRADES' />
+                </Tabs>
+            }
             <div>
                 {
-                    !props.hasActiveUser &&
+                    !props.activeUser &&
                     (<UserLogin
                         loginDispatch={props.userDispatches.login}
                         createUserDispatch={props.userDispatches.createUserAccount}
                         loginStatus={props.loginStatus}/>)
                 }
                 {
-                    activeTab === 0 && props.hasActiveUser &&
-                    (<OrderMaker createOrder={props.createOrder}/>)
+                    activeTab === 0 && props.activeUser &&
+                    (<OrderMaker 
+                        createOrder={props.createOrder}
+                        activeUser={props.activeUser}
+                        orderStatus={props.orderStatus}
+                    />)
                 }
                 { 
-                    activeTab === 1 && props.hasActiveUser &&
+                    activeTab === 1 && props.activeUser &&
                     (<BooksBrowser 
                         values={props.orders}
                         bookType={BookType.Orders}
@@ -65,7 +75,7 @@ export function PrivateNavbar(props: {
                         isPrivate={true}/>)
                 }
                 {
-                    activeTab === 2 && props.hasActiveUser &&
+                    activeTab === 2 && props.activeUser &&
                     (<BooksBrowser 
                         values={props.trades}
                         bookType={BookType.Trades}

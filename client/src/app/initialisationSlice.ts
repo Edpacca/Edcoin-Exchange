@@ -1,11 +1,12 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { AuthenticationRequest } from "../models/authenticationRequest";
 import { AuthenticationResponse } from "../models/authenticationResponse";
+import { Status } from "../models/status";
 import { RootState } from "./store";
 
 interface InitialisationState {
     siteToken?: string
-    status: 'idle' | 'loading' | 'failed'
+    status: Status
 }
 
 const initialState: InitialisationState = {
@@ -52,6 +53,6 @@ export const initialisationSlice = createSlice({
     }
 });
 
-export const selectInitialisationStatus = (state: RootState): 'idle' | 'loading' | 'failed' => state.initialisation.status;
+export const selectInitialisationStatus = (state: RootState): Status => state.initialisation.status;
 
 export default initialisationSlice.reducer;

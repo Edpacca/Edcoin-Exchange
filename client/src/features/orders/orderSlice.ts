@@ -6,9 +6,11 @@ import { FilterState, selectPublicFilters, selectPrivateFilters } from '../filte
 import { rangeFilter } from '../../utilities/filterHelpers';
 import { ExchangeType } from '../../models/exchangeType';
 import { MarketType } from '../../models/marketType';
+import { delay } from '../../utilities/asyncHelpers';
+import { Status } from '../../models/status';
 export interface OrdersState {
     value: Order[];
-    status: 'idle' | 'loading' | 'failed';
+    status: Status;
 }
 
 const initialState: OrdersState = {
@@ -19,7 +21,6 @@ const initialState: OrdersState = {
 export const fetchOrders = createAsyncThunk(
     'orders/fetchOrders',
     async (token: string) => {
-        console.log("token: " + token);
         const response = await fetch(`${process.env.REACT_APP_SERVER}/orders`, {
             method: 'GET',
             mode: 'cors',
@@ -44,7 +45,7 @@ export const createOrder = createAsyncThunk(
             },
             body: JSON.stringify(order)
         }).then(response => response.json());
-        return response;
+        return await delay(1000).then(() => response);
     }
 )
 
@@ -77,7 +78,7 @@ export const orderSlice = createSlice({
 });
 
 export const selectOrders = (state: RootState): Order[] => state.orders.value;
-
+export const selectOrderStatus = (state: RootState): Status => state.orders.status;
 
 // returns a list of order ids
 export const selectOrderIds = createSelector(
